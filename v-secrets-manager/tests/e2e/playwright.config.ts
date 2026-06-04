@@ -2,7 +2,8 @@ import { defineConfig } from '@playwright/test';
 import path from 'path';
 
 const PLAYGROUND_URL = process.env.PLAYGROUND_URL || 'http://localhost:9400';
-const PLUGIN_DIR = path.resolve( __dirname, '../../' );
+const PLUGIN_DIR   = path.resolve( __dirname, '../../' );
+const BLUEPRINT    = path.resolve( __dirname, 'blueprint.json' );
 
 export default defineConfig( {
 	testDir: './tests',
@@ -19,14 +20,9 @@ export default defineConfig( {
 		headless: true,
 	},
 	webServer: {
-		command: `npx @wp-playground/cli@latest server \
-			--port=9400 \
-			--mount="${ PLUGIN_DIR }:/wordpress/wp-content/plugins/v-secrets-manager" \
-			--mount-before-install \
-			--blueprint=./tests/e2e/blueprint.json`,
+		command: `npx --yes @wp-playground/cli@latest start --path="${ PLUGIN_DIR }" --port=9400 --php=8.0 --blueprint="${ BLUEPRINT }" --skip-browser`,
 		url: PLAYGROUND_URL,
-		reuseExistingServer: ! process.env.CI,
+		reuseExistingServer: true,
 		timeout: 120000,
-		cwd: PLUGIN_DIR,
 	},
 } );

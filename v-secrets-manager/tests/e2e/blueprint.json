@@ -8,19 +8,13 @@
 	"phpExtensionBundles": ["kitchen-sink"],
 	"steps": [
 		{
-			"step": "installPlugin",
-			"pluginZipFile": {
-				"resource": "vfs",
-				"path": "/wordpress/wp-content/plugins/v-secrets-manager"
-			},
-			"options": {
-				"activate": true
-			}
-		},
-		{
 			"step": "login",
 			"username": "admin",
 			"password": "password"
+		},
+		{
+			"step": "wp-cli",
+			"command": "wp plugin activate v-secrets-manager"
 		}
 	]
 }

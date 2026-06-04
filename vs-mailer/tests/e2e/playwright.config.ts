@@ -2,7 +2,8 @@ import { defineConfig } from '@playwright/test';
 import path from 'path';
 
 const PLAYGROUND_URL = process.env.PLAYGROUND_URL || 'http://localhost:9400';
-const WORKSPACE_DIR = path.resolve( __dirname, '../../../' );
+const WORKSPACE_DIR  = path.resolve( __dirname, '../../../' );
+const BLUEPRINT      = path.resolve( __dirname, 'blueprint.json' );
 
 export default defineConfig( {
 	testDir: './tests',
@@ -19,14 +20,9 @@ export default defineConfig( {
 		headless: true,
 	},
 	webServer: {
-		command: `npx @wp-playground/cli@latest server \
-			--port=9400 \
-			--mount="${ WORKSPACE_DIR }:/wordpress/wp-content/plugins" \
-			--mount-before-install \
-			--blueprint=./tests/e2e/blueprint.json`,
+		command: `npx @wp-playground/cli@latest server --port=9400 --mount-before-install="${ WORKSPACE_DIR }:/wordpress/wp-content/plugins" --blueprint="${ BLUEPRINT }"`,
 		url: PLAYGROUND_URL,
 		reuseExistingServer: ! process.env.CI,
 		timeout: 120000,
-		cwd: path.resolve( __dirname, '../../' ),
 	},
 } );

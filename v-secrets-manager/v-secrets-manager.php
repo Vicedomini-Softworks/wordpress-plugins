@@ -28,6 +28,8 @@ if ( file_exists( $vs_aws_autoload ) ) {
 	require_once $vs_aws_autoload;
 }
 
+require_once VSECRETS_MANAGER_PLUGIN_DIR . 'includes/class-activator.php';
+require_once VSECRETS_MANAGER_PLUGIN_DIR . 'includes/class-deactivator.php';
 require_once VSECRETS_MANAGER_PLUGIN_DIR . 'includes/class-v-secrets-manager.php';
 
 register_activation_hook( __FILE__, array( 'VS_Secrets_Manager_Activator', 'activate' ) );
