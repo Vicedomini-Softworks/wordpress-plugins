@@ -38,6 +38,25 @@ Display social media feeds from Instagram, Facebook, TikTok, X, Threads, Bluesky
 - **License**: GPL v3
 - **Directory**: `social-feed/`
 
+### VS Mailer
+
+Complete SMTP, Brevo, and Mailgun email delivery plugin for WordPress.
+
+- **Version**: 1.0.0
+- **Requires**: WordPress 6.9+, PHP 7.2.24+
+- **Requires Plugins**: v-secrets-manager
+- **License**: GPL v3
+- **Directory**: `vs-mailer/`
+
+#### Features
+
+- **SMTP Mode**: TLS/SSL support, custom port, authentication
+- **Brevo API**: Transactional email API v3
+- **Mailgun API**: US/EU region support with custom domain
+- Secure credential storage via VSecrets Manager
+- Test email tool and optional email logging
+- Full header support (CC, BCC, Reply-To, Content-Type)
+
 ## Development
 
 ### Requirements
@@ -62,7 +81,31 @@ cd social-feed && composer run phpstan
 cd v-secrets-manager/tests/e2e
 npm install && npx playwright install chromium
 npm test
+
+# Social Feed e2e tests
+cd social-feed/tests/e2e
+npm install && npx playwright install chromium
+npm test
+
+# VS Mailer e2e tests
+cd vs-mailer/tests/e2e
+npm install && npx playwright install chromium
+npm test
 ```
+
+### CI/CD
+
+All plugins have GitHub Actions workflows that run on push/PR to `main` and `develop`:
+
+- **e2e tests**: Playwright tests in `tests/e2e/`
+- **Static analysis**: PHPCS (WordPress Coding Standards) and PHPStan
+- **Build**: Plugin ZIP creation and artifact upload
+- **Release**: Automatic ZIP upload to GitHub Releases on tag publish
+
+Workflows:
+- `.github/workflows/build-vs-secrets-manager.yml`
+- `.github/workflows/build-social-feed.yml`
+- `.github/workflows/build-vs-mailer.yml`
 
 ## License
 
