@@ -164,7 +164,11 @@ abstract class Social_Feed_Provider {
 		if ( $code >= 400 ) {
 			$body = wp_remote_retrieve_body( $response );
 			error_log( 'Social Feed HTTP Error ' . $code . ' from ' . $url . ': ' . $body );
-			return new WP_Error( 'http_error', 'HTTP ' . $code );
+			return new WP_Error(
+				'http_error',
+				/* translators: %d: HTTP status code */
+				sprintf( __( 'HTTP error %d from the platform API.', 'social-feed' ), $code )
+			);
 		}
 
 		$body = wp_remote_retrieve_body( $response );

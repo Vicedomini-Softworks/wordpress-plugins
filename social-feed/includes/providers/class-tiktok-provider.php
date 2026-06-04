@@ -100,7 +100,7 @@ class Social_Feed_TikTok_Provider extends Social_Feed_Provider {
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 
 		if ( isset( $body['error'] ) ) {
-			return new WP_Error( 'oauth_error', $body['error']['message'] ?? 'OAuth error' );
+			return new WP_Error( 'oauth_error', $body['error']['message'] ?? __( 'OAuth authorization failed.', 'social-feed' ) );
 		}
 
 		$user_info = self::get_user_info( $body['data']['access_token'] ?? '' );

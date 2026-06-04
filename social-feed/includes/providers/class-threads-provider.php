@@ -112,7 +112,7 @@ class Social_Feed_Threads_Provider extends Social_Feed_Provider {
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 
 		if ( isset( $body['error'] ) ) {
-			return new WP_Error( 'oauth_error', $body['error']['message'] ?? 'OAuth error' );
+			return new WP_Error( 'oauth_error', $body['error']['message'] ?? __( 'OAuth authorization failed.', 'social-feed' ) );
 		}
 
 		// Exchange for long-lived token

@@ -119,7 +119,7 @@ class Social_Feed_YouTube_Provider extends Social_Feed_Provider {
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 
 		if ( isset( $body['error'] ) ) {
-			return new WP_Error( 'oauth_error', $body['error_description'] ?? 'OAuth error' );
+			return new WP_Error( 'oauth_error', $body['error_description'] ?? __( 'OAuth authorization failed.', 'social-feed' ) );
 		}
 
 		// Get channel ID

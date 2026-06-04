@@ -47,6 +47,12 @@ All sensitive credentials (SMTP passwords, Brevo API keys, Mailgun API keys) are
 
 No. VS Mailer replaces the `wp_mail()` implementation entirely. Deactivate other SMTP/mailer plugins before using.
 
+== Development ==
+
+* **e2e Tests:** Playwright tests in `tests/e2e/`
+* **Static Analysis:** PHPCS and PHPStan
+* **CI:** GitHub Actions runs e2e tests, PHPCS, and PHPStan on push/PR
+
 == Changelog ==
 
 = 1.0.0 =

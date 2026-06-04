@@ -117,12 +117,12 @@ class Social_Feed_Shortcode {
 		// For embed mode, admin must provide URL via account field
 		$url = $feed['account'] ?? '';
 		if ( empty( $url ) ) {
-			return '<p class="social-feed-error">No embed URL configured</p>';
+			return '<p class="social-feed-error">' . esc_html__( 'No embed URL configured for this feed.', 'social-feed' ) . '</p>';
 		}
 
 		$provider = self::get_provider( $feed['platform'] );
 		if ( ! $provider ) {
-			return '<p class="social-feed-error">Unsupported platform</p>';
+			return '<p class="social-feed-error">' . esc_html__( 'Unsupported platform.', 'social-feed' ) . '</p>';
 		}
 
 		return $provider->get_embed_html( $url );

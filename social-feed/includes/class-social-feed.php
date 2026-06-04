@@ -20,10 +20,11 @@ class Social_Feed {
 	}
 
 	public static function notice_missing_dependency(): void {
-		echo '<div class="notice notice-error"><p>';
-		echo '<strong>Social Feed</strong>: ';
-		esc_html_e( 'VSecrets Manager plugin is required and must be active.', 'social-feed' );
-		echo '</p></div>';
+		printf(
+			'<div class="notice notice-error"><p><strong>%s</strong>: %s</p></div>',
+			esc_html__( 'Social Feed', 'social-feed' ),
+			esc_html__( 'VSecrets Manager plugin is required and must be active.', 'social-feed' )
+		);
 	}
 
 	private static function load_dependencies(): void {
@@ -51,6 +52,9 @@ class Social_Feed {
 	}
 
 	private static function register_hooks(): void {
+		// Text domain
+		add_action( 'init', array( __CLASS__, 'load_textdomain' ) );
+
 		// Shortcode
 		add_action( 'init', array( 'Social_Feed_Shortcode', 'register' ) );
 
@@ -123,6 +127,14 @@ class Social_Feed {
 
 		wp_redirect( admin_url( 'admin.php?page=social-feed-platform-settings&platform=' . $platform . '&saved=1' ) );
 		exit;
+	}
+
+	public static function load_textdomain(): void {
+		load_plugin_textdomain(
+			'social-feed',
+			false,
+			dirname( plugin_basename( SOCIAL_FEED_PLUGIN_DIR . 'social-feed.php' ) ) . '/languages'
+		);
 	}
 
 	/**

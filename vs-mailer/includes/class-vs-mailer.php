@@ -7,6 +7,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 class VS_Mailer {
 
 	public static function init(): void {
+		load_plugin_textdomain(
+			'vs-mailer',
+			false,
+			dirname( plugin_basename( VS_MAILER_PLUGIN_DIR ) ) . '/languages'
+		);
+
 		if ( ! function_exists( 'vs_secrets_manager_get' ) ) {
 			add_action( 'admin_notices', array( __CLASS__, 'notice_missing_dependency' ) );
 			return;

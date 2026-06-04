@@ -7,6 +7,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 class VS_Secrets_Manager {
 
 	public static function init(): void {
+		load_plugin_textdomain(
+			'vs-secrets-manager',
+			false,
+			dirname( plugin_basename( VSECRETS_MANAGER_PLUGIN_DIR ) ) . '/languages'
+		);
+
 		self::load_dependencies();
 		self::register_hooks();
 	}

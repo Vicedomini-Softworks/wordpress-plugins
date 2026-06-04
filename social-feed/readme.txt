@@ -64,6 +64,17 @@ TikTok's Display API requires sandbox approval then a production audit. The plug
 = 1.0.0 =
 * Initial release
 
+== Development ==
+
+* **e2e Tests:** Playwright tests in `tests/e2e/`
+* **Static Analysis:** PHPCS (WordPress Coding Standards) and PHPStan (level 5)
+* **CI:** GitHub Actions runs e2e tests, PHPCS, and PHPStan on push/PR
+
+== Changelog ==
+
+= 1.0.0 =
+* Initial release
+
 == Upgrade Notice ==
 
 = 1.0.0 =

@@ -1,0 +1,286 @@
+# Translation of VS Mailer in Italian
+# Copyright (C) 2026 Vicedomini Softworks
+# This file is distributed under the GPL v3 license.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: VS Mailer 1.0.0\n"
+"Report-Msgid-Bugs-To: https://vicedominisoftworks.com\n"
+"Last-Translator: Vicedomini Softworks\n"
+"Language-Team: Vicedomini Softworks\n"
+"Language: it_IT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: includes/admin/class-admin.php:11 includes/admin/class-admin.php:12
+#: includes/admin/class-admin.php:27
+msgid "VS Mailer"
+msgstr "VS Mailer"
+
+#: includes/admin/class-admin.php:21 includes/admin/class-admin.php:51
+#: includes/admin/class-admin.php:155 includes/admin/class-admin.php:206
+msgid "Permission denied."
+msgstr "Permesso negato."
+
+#: includes/admin/class-admin.php:31
+msgid "Settings"
+msgstr "Impostazioni"
+
+#: includes/admin/class-admin.php:33
+msgid "Test Email"
+msgstr "Email di Test"
+
+#: includes/admin/class-admin.php:35
+msgid "Log"
+msgstr "Registro"
+
+#: includes/admin/class-admin.php:170
+msgid "Please enter a valid email address."
+msgstr "Inserisci un indirizzo email valido."
+
+#: includes/admin/class-admin.php:178
+msgid "VS Mailer Test Email"
+msgstr "Email di Test VS Mailer"
+
+#: includes/admin/class-admin.php:179
+msgid "VS Mailer Test"
+msgstr "Test VS Mailer"
+
+#: includes/admin/class-admin.php:181
+msgid "This is a test email sent at %s."
+msgstr "Questa è un'email di test inviata alle %s."
+
+#: includes/admin/class-admin.php:184
+msgid "If you receive this, your mailer configuration is working correctly."
+msgstr "Se ricevi questa email, la configurazione del mailer funziona correttamente."
+
+#: includes/admin/class-admin.php:194
+msgid "Test email sent to %s."
+msgstr "Email di test inviata a %s."
+
+#: includes/admin/class-admin.php:195
+msgid "Failed to send test email."
+msgstr "Invio dell'email di test fallito."
+
+#: includes/admin/class-admin.php:244
+msgid "Email Log"
+msgstr "Registro Email"
+
+#: includes/admin/class-admin.php:248
+msgid "Email logging is disabled. Enable it in Settings to start tracking sent emails."
+msgstr "Registrazione email disabilitata. Attivala nelle Impostazioni per tracciare le email inviate."
+
+#: includes/admin/class-admin.php:252
+msgid "No emails logged yet."
+msgstr "Nessuna email registrata."
+
+#: includes/admin/class-admin.php:258
+msgid "Clear Log"
+msgstr "Pulisci Registro"
+
+#: includes/admin/class-admin.php:264
+msgid "Time"
+msgstr "Ora"
+
+#: includes/admin/class-admin.php:265
+msgid "To"
+msgstr "A"
+
+#: includes/admin/class-admin.php:266
+msgid "Subject"
+msgstr "Oggetto"
+
+#: includes/admin/class-admin.php:267 includes/admin/views/settings.php:51
+msgid "Mailer"
+msgstr "Mailer"
+
+#: includes/admin/class-admin.php:268
+msgid "Status"
+msgstr "Stato"
+
+#: includes/admin/class-admin.php:269
+msgid "Error"
+msgstr "Errore"
+
+#: includes/admin/class-admin.php:281
+msgid "Sent"
+msgstr "Inviata"
+
+#: includes/admin/class-admin.php:283
+msgid "Failed"
+msgstr "Fallita"
+
+#: includes/admin/views/settings.php:29
+msgid "Settings saved."
+msgstr "Impostazioni salvate."
+
+#: includes/admin/views/settings.php:39
+msgid "From Name"
+msgstr "Nome Mittente"
+
+#: includes/admin/views/settings.php:45
+msgid "From Email"
+msgstr "Email Mittente"
+
+#: includes/admin/views/settings.php:63
+msgid "SMTP Settings"
+msgstr "Impostazioni SMTP"
+
+#: includes/admin/views/settings.php:66
+msgid "SMTP Host"
+msgstr "Host SMTP"
+
+#: includes/admin/views/settings.php:70
+msgid "SMTP Port"
+msgstr "Porta SMTP"
+
+#: includes/admin/views/settings.php:74
+msgid "Encryption"
+msgstr "Crittografia"
+
+#: includes/admin/views/settings.php:79
+msgid "None"
+msgstr "Nessuna"
+
+#: includes/admin/views/settings.php:84
+msgid "Authentication"
+msgstr "Autenticazione"
+
+#: includes/admin/views/settings.php:87
+msgid "Yes"
+msgstr "Sì"
+
+#: includes/admin/views/settings.php:88
+msgid "No"
+msgstr "No"
+
+#: includes/admin/views/settings.php:93
+msgid "SMTP Username"
+msgstr "Nome Utente SMTP"
+
+#: includes/admin/views/settings.php:97
+msgid "SMTP Password"
+msgstr "Password SMTP"
+
+#: includes/admin/views/settings.php:100 includes/admin/views/settings.php:113
+#: includes/admin/views/settings.php:130
+msgid "Leave blank to keep current password."
+msgstr "Lascia vuoto per mantenere la password corrente."
+
+#: includes/admin/views/settings.php:107
+msgid "Brevo Settings"
+msgstr "Impostazioni Brevo"
+
+#: includes/admin/views/settings.php:110 includes/admin/views/settings.php:127
+msgid "API Key"
+msgstr "Chiave API"
+
+#: includes/admin/views/settings.php:117
+msgid "Sender Domain"
+msgstr "Dominio Mittente"
+
+#: includes/admin/views/settings.php:124
+msgid "Mailgun Settings"
+msgstr "Impostazioni Mailgun"
+
+#: includes/admin/views/settings.php:134
+msgid "Domain"
+msgstr "Dominio"
+
+#: includes/admin/views/settings.php:138
+msgid "Region"
+msgstr "Regione"
+
+#: includes/admin/views/settings.php:141
+msgid "US"
+msgstr "US"
+
+#: includes/admin/views/settings.php:142
+msgid "EU"
+msgstr "EU"
+
+#: includes/admin/views/settings.php:149
+msgid "Logging"
+msgstr "Registrazione"
+
+#: includes/admin/views/settings.php:152
+msgid "Log Emails"
+msgstr "Registra Email"
+
+#: includes/admin/views/settings.php:156
+msgid "Log all sent emails (last 100 entries)"
+msgstr "Registra tutte le email inviate (ultime 100 voci)"
+
+#: includes/admin/views/settings.php:162
+msgid "Save Settings"
+msgstr "Salva Impostazioni"
+
+#: includes/admin/views/test-email.php:10
+msgid "Send a Test Email"
+msgstr "Invia un'Email di Test"
+
+#: includes/admin/views/test-email.php:22
+msgid "Enter an email address to receive a test message using your current mailer configuration."
+msgstr "Inserisci un indirizzo email per ricevere un messaggio di test con la configurazione corrente."
+
+#: includes/admin/views/test-email.php:30
+msgid "Send To"
+msgstr "Invia A"
+
+#: includes/admin/views/test-email.php:33
+msgid "The email address that will receive the test."
+msgstr "L'indirizzo email che riceverà il test."
+
+#: includes/admin/views/test-email.php:38
+msgid "Send Test Email"
+msgstr "Invia Email di Test"
+
+#: includes/providers/class-smtp-provider.php:54
+msgid "SMTP host not configured."
+msgstr "Host SMTP non configurato."
+
+#: includes/providers/class-smtp-provider.php:65
+msgid "Successfully connected to %s:%d."
+msgstr "Connessione riuscita a %s:%d."
+
+#: includes/providers/class-smtp-provider.php:75
+msgid "Connection to %s:%d failed: %s"
+msgstr "Connessione a %s:%d fallita: %s"
+
+#: includes/providers/class-brevo-provider.php:105
+msgid "Brevo API key not configured."
+msgstr "Chiave API Brevo non configurata."
+
+#: includes/providers/class-brevo-provider.php:135
+msgid "Connected as %s."
+msgstr "Connesso come %s."
+
+#: includes/providers/class-brevo-provider.php:144
+msgid "Brevo API error (HTTP %d)."
+msgstr "Errore API Brevo (HTTP %d)."
+
+#: includes/providers/class-mailgun-provider.php:124
+msgid "Mailgun API key or domain not configured."
+msgstr "Chiave API Mailgun o dominio non configurato."
+
+#: includes/providers/class-mailgun-provider.php:155
+msgid "Successfully connected to Mailgun."
+msgstr "Connessione a Mailgun riuscita."
+
+#: includes/providers/class-mailgun-provider.php:162
+msgid "Mailgun API error (HTTP %d)."
+msgstr "Errore API Mailgun (HTTP %d)."
+
+#: includes/class-vs-mailer.php:22
+msgid "VSecrets Manager plugin is required and must be active."
+msgstr "Il plugin VSecrets Manager è richiesto e deve essere attivo."
+
+#: includes/class-vs-mailer.php:93
+msgid "Brevo send failed"
+msgstr "Invio Brevo fallito"
+
+#: includes/class-vs-mailer.php:113
+msgid "Mailgun send failed"
+msgstr "Invio Mailgun fallito"

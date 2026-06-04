@@ -67,6 +67,16 @@ Yes — delete the old secret and create a new one with the same name and the ne
 = 1.0.0 =
 * Initial release
 
+== Development ==
+
+* **e2e Tests:** Playwright tests in `tests/e2e/`
+* **CI:** GitHub Actions runs e2e tests on push/PR
+
+== Changelog ==
+
+= 1.0.0 =
+* Initial release
+
 == Upgrade Notice ==
 
 = 1.0.0 =
