@@ -27,15 +27,15 @@ $platforms  = array(
 );
 
 $layouts    = array(
-	'grid'     => 'Grid',
-	'masonry'  => 'Masonry',
-	'carousel' => 'Carousel',
-	'column'   => 'Column',
+	'grid'     => __( 'Grid', 'social-feed' ),
+	'masonry'  => __( 'Masonry', 'social-feed' ),
+	'carousel' => __( 'Carousel', 'social-feed' ),
+	'column'   => __( 'Column', 'social-feed' ),
 );
 
 $themes     = array(
-	'light' => 'Light',
-	'dark'  => 'Dark',
+	'light' => __( 'Light', 'social-feed' ),
+	'dark'  => __( 'Dark', 'social-feed' ),
 );
 ?>
 

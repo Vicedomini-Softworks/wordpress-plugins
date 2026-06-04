@@ -111,25 +111,25 @@ class Social_Feed_Feed_Repository {
 		$errors = array();
 
 		if ( empty( $data['slug'] ) || ! preg_match( '/^[a-z0-9-]+$/', $data['slug'] ) ) {
-			$errors[] = 'Invalid slug. Use lowercase letters, numbers, and hyphens only.';
+			$errors[] = __( 'Invalid slug. Use lowercase letters, numbers, and hyphens only.', 'social-feed' );
 		}
 
 		$platforms = array( 'instagram', 'facebook', 'tiktok', 'x', 'threads', 'bluesky', 'youtube' );
 		if ( ! in_array( $data['platform'] ?? '', $platforms, true ) ) {
-			$errors[] = 'Invalid platform.';
+			$errors[] = __( 'Invalid platform.', 'social-feed' );
 		}
 
 		if ( isset( $data['display']['limit'] ) ) {
 			$limit = intval( $data['display']['limit'] );
 			if ( $limit < 1 || $limit > 48 ) {
-				$errors[] = 'Limit must be between 1 and 48.';
+				$errors[] = __( 'Limit must be between 1 and 48.', 'social-feed' );
 			}
 		}
 
 		if ( isset( $data['cache_hours'] ) ) {
 			$cache = intval( $data['cache_hours'] );
 			if ( $cache < 4 || $cache > 48 ) {
-				$errors[] = 'Cache duration must be between 4 and 48 hours.';
+				$errors[] = __( 'Cache duration must be between 4 and 48 hours.', 'social-feed' );
 			}
 		}
 

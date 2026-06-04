@@ -65,7 +65,7 @@ class Social_Feed_OAuth_Handler {
 
 		$provider_class = self::get_provider_class( $platform );
 		if ( ! $provider_class ) {
-			return new WP_REST_Response( array( 'error' => 'Invalid platform' ), 400 );
+			return new WP_REST_Response( array( 'error' => __( 'Invalid platform.', 'social-feed' ) ), 400 );
 		}
 
 		$auth_url = $provider_class::get_auth_url( $state );
@@ -102,7 +102,7 @@ class Social_Feed_OAuth_Handler {
 			return new WP_REST_Response(
 				array(
 					'success' => false,
-					'error'   => 'Missing code or state',
+					'error'   => __( 'Missing authorization code or state parameter.', 'social-feed' ),
 				),
 				400
 			);
@@ -114,7 +114,7 @@ class Social_Feed_OAuth_Handler {
 			return new WP_REST_Response(
 				array(
 					'success' => false,
-					'error'   => 'Invalid state',
+					'error'   => __( 'Invalid OAuth state. Please try connecting again.', 'social-feed' ),
 				),
 				400
 			);
@@ -124,7 +124,7 @@ class Social_Feed_OAuth_Handler {
 
 		$provider_class = self::get_provider_class( $platform );
 		if ( ! $provider_class ) {
-			return new WP_REST_Response( array( 'error' => 'Invalid platform' ), 400 );
+			return new WP_REST_Response( array( 'error' => __( 'Invalid platform.', 'social-feed' ) ), 400 );
 		}
 
 		// Exchange code for tokens
@@ -146,7 +146,7 @@ class Social_Feed_OAuth_Handler {
 		return new WP_REST_Response(
 			array(
 				'success'  => true,
-				'message'  => 'Successfully connected account',
+				'message'  => __( 'Account connected successfully.', 'social-feed' ),
 				'redirect' => admin_url( 'admin.php?page=social-feed-platform-settings&platform=' . $platform . '&connected=1' ),
 			),
 			200
