@@ -1,0 +1,21 @@
+{
+	"name": "vicedomini-softworks/v-secrets-manager",
+	"description": "WordPress plugin to manage secrets with multiple providers: encrypted DB, AWS Secrets Manager, Hashicorp Vault / OpenBao.",
+	"type": "wordpress-plugin",
+	"license": "GPL-3.0-only",
+	"require": {
+		"php": ">=7.2.24",
+		"aws/aws-sdk-php": "^3.0"
+	},
+	"config": {
+		"optimize-autoloader": true,
+		"platform": {
+			"php": "7.2.24"
+		}
+	},
+	"scripts": {
+		"build": [
+			"@php -r \"echo 'Building VS Secrets Manager...';\""
+		]
+	}
+}

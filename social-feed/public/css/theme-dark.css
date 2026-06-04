@@ -1,0 +1,25 @@
+/* Social Feed - Dark Theme */
+
+.social-feed-dark {
+	--sf-bg:           #1a1a1a;
+	--sf-bg-item:      #242424;
+	--sf-border:       #333333;
+	--sf-text:         #f0f0f0;
+	--sf-text-muted:   #999999;
+	--sf-link:         #6ac0e8;
+	--sf-shadow:       0 1px 6px rgba(0,0,0,.4);
+}
+
+.social-feed-dark .social-feed-item {
+	background: var(--sf-bg-item);
+	border: 1px solid var(--sf-border);
+	box-shadow: var(--sf-shadow);
+}
+
+.social-feed-dark .social-feed-caption {
+	color: var(--sf-text);
+}
+
+.social-feed-dark .social-feed-meta {
+	color: var(--sf-text-muted);
+}

@@ -1,0 +1,30 @@
+/* Social Feed - Admin Styles */
+
+.social-feed-connected {
+	font-size: 14px;
+	vertical-align: middle;
+}
+
+.tab-content {
+	background: #fff;
+	border: 1px solid #ccd0d4;
+	border-top: none;
+	padding: 20px;
+}
+
+.nav-tab-wrapper {
+	margin-bottom: 0;
+}
+
+.form-table code {
+	font-size: 13px;
+	user-select: all;
+}
+
+.bluesky-embed {
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	padding: 12px;
+	font-style: italic;
+	color: #666;
+}

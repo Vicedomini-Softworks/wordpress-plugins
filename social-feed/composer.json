@@ -1,0 +1,26 @@
+{
+	"name": "vicedominisoftworks/social-feed",
+	"description": "WordPress plugin to display social media feeds",
+	"type": "wordpress-plugin",
+	"license": "GPL-3.0-or-later",
+	"require": {
+		"php": ">=7.2.24"
+	},
+	"require-dev": {
+		"squizlabs/php_codesniffer": "^3.0",
+		"wp-coding-standards/wpcs": "^3.0",
+		"phpstan/phpstan": "^1.0",
+		"szepeviktor/phpstan-wordpress": "^1.0"
+	},
+	"scripts": {
+		"phpcs": "phpcs --standard=WordPress .",
+		"phpcbf": "phpcbf --standard=WordPress .",
+		"phpstan": "phpstan analyse --level=5 .",
+		"test": "phpunit"
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	}
+}

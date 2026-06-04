@@ -1,0 +1,14 @@
+{
+	"name": "social-feed-e2e",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"test": "playwright test",
+		"test:headed": "playwright test --headed",
+		"playground": "npx @wp-playground/cli@latest server --port=9401"
+	},
+	"devDependencies": {
+		"@playwright/test": "^1.52.0",
+		"@wp-playground/cli": "^1.6.3"
+	}
+}

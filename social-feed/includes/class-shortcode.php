@@ -1,0 +1,250 @@
+<?php
+/**
+ * Shortcode handler
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+class Social_Feed_Shortcode {
+
+	/**
+	 * Register shortcode
+	 */
+	public static function register(): void {
+		add_shortcode( 'social_feed', array( __CLASS__, 'render' ) );
+	}
+
+	/**
+	 * Render shortcode
+	 *
+	 * [social_feed id="my-feed" type="grid" limit="8"]
+	 */
+	public static function render( array $atts ): string {
+		$atts = shortcode_atts(
+			array(
+				'id'    => '',
+				'type'  => '',
+				'limit' => '',
+			),
+			$atts,
+			'social_feed'
+		);
+
+		$slug = sanitize_key( $atts['id'] );
+		if ( empty( $slug ) ) {
+			return self::render_error( 'Missing feed ID' );
+		}
+
+		$feed = Social_Feed_Feed_Repository::get( $slug );
+		if ( ! $feed ) {
+			return self::render_error( 'Feed not found: ' . $slug );
+		}
+
+		// Apply shortcode overrides
+		if ( ! empty( $atts['type'] ) ) {
+			$feed['display']['type'] = sanitize_key( $atts['type'] );
+		}
+		if ( ! empty( $atts['limit'] ) ) {
+			$feed['display']['limit'] = max( 1, min( 48, intval( $atts['limit'] ) ) );
+		}
+
+		// Enqueue assets for this feed's theme/type
+		Social_Feed_Public::enqueue_for_feed(
+			$feed['display']['theme'] ?? 'light',
+			$feed['display']['type'] ?? 'grid'
+		);
+
+		// Check cache
+		$cached = Social_Feed_Cache_Manager::get( $slug );
+		if ( null !== $cached ) {
+			return self::render_feed( $feed, $cached );
+		}
+
+		// Fetch fresh data
+		$posts = self::fetch_posts( $feed );
+
+		// Cache results
+		Social_Feed_Cache_Manager::set( $slug, $posts, $feed['cache_hours'] );
+
+		return self::render_feed( $feed, $posts );
+	}
+
+	/**
+	 * Fetch posts from provider
+	 */
+	private static function fetch_posts( array $feed ): array {
+		if ( 'embed' === $feed['mode'] ) {
+			// In embed mode, we render oEmbed directly - return placeholder
+			return array(
+				array(
+					'embed_html' => self::get_embed_placeholder( $feed ),
+				),
+			);
+		}
+
+		$provider = self::get_provider( $feed['platform'] );
+		if ( ! $provider ) {
+			return array();
+		}
+
+		return $provider->fetch_posts( $feed, $feed['display']['limit'] );
+	}
+
+	/**
+	 * Get provider instance
+	 */
+	private static function get_provider( string $platform ): ?Social_Feed_Provider {
+		$map = array(
+			'instagram' => 'Social_Feed_Instagram_Provider',
+			'facebook'  => 'Social_Feed_Facebook_Provider',
+			'tiktok'    => 'Social_Feed_TikTok_Provider',
+			'x'         => 'Social_Feed_X_Provider',
+			'threads'   => 'Social_Feed_Threads_Provider',
+			'bluesky'   => 'Social_Feed_Bluesky_Provider',
+			'youtube'   => 'Social_Feed_YouTube_Provider',
+		);
+
+		$class = $map[ $platform ] ?? null;
+		return $class && class_exists( $class ) ? new $class() : null;
+	}
+
+	/**
+	 * Get embed placeholder for embed mode
+	 */
+	private static function get_embed_placeholder( array $feed ): string {
+		// For embed mode, admin must provide URL via account field
+		$url = $feed['account'] ?? '';
+		if ( empty( $url ) ) {
+			return '<p class="social-feed-error">No embed URL configured</p>';
+		}
+
+		$provider = self::get_provider( $feed['platform'] );
+		if ( ! $provider ) {
+			return '<p class="social-feed-error">Unsupported platform</p>';
+		}
+
+		return $provider->get_embed_html( $url );
+	}
+
+	/**
+	 * Render feed HTML
+	 */
+	private static function render_feed( array $feed, array $posts ): string {
+		if ( empty( $posts ) ) {
+			return self::render_empty( $feed );
+		}
+
+		$display = $feed['display'];
+		$limit   = $display['limit'];
+
+		// Apply limit
+		$posts = array_slice( $posts, 0, $limit );
+
+		$theme    = esc_attr( $display['theme'] ?? 'light' );
+		$type     = esc_attr( $display['type'] ?? 'grid' );
+		$feed_id  = esc_attr( $feed['slug'] );
+
+		ob_start();
+		?>
+		<div class="social-feed social-feed-<?php echo $theme; ?> social-feed-<?php echo $type; ?>" data-feed-id="<?php echo $feed_id; ?>">
+			<?php foreach ( $posts as $index => $post ): ?>
+				<?php if ( ! empty( $post['embed_html'] ) && 'embed' === $feed['mode'] ): ?>
+					<div class="social-feed-item social-feed-embed">
+						<?php echo wp_kses_post( $post['embed_html'] ); ?>
+					</div>
+				<?php else: ?>
+					<div class="social-feed-item">
+						<?php if ( ! empty( $post['media_url'] ) && ! empty( $display['show_media'] ) ): ?>
+							<div class="social-feed-media">
+								<a href="<?php echo esc_url( $post['original_url'] ?? '#' ); ?>" target="_blank" rel="noopener noreferrer">
+									<?php if ( 'video' === $post['type'] ): ?>
+										<video poster="<?php echo esc_url( $post['media_url'] ); ?>" controls>
+											<source src="<?php echo esc_url( $post['media_url'] ); ?>" type="video/mp4">
+										</video>
+									<?php else: ?>
+										<img src="<?php echo esc_url( $post['media_url'] ); ?>" alt="" loading="lazy">
+									<?php endif; ?>
+								</a>
+							</div>
+						<?php endif; ?>
+
+						<?php if ( ! empty( $post['caption'] ) && ! empty( $display['show_caption'] ) ): ?>
+							<div class="social-feed-caption">
+								<?php echo wp_kses_post( $post['caption'] ); ?>
+							</div>
+						<?php endif; ?>
+
+						<?php if ( ! empty( $display['show_username'] ) || ! empty( $display['show_timestamp'] ) ): ?>
+							<div class="social-feed-meta">
+								<?php if ( ! empty( $post['username'] ) && ! empty( $display['show_username'] ) ): ?>
+									<span class="social-feed-username"><?php echo esc_html( $post['username'] ); ?></span>
+								<?php endif; ?>
+								<?php if ( ! empty( $post['timestamp'] ) && ! empty( $display['show_timestamp'] ) ): ?>
+									<span class="social-feed-timestamp"><?php echo self::format_timestamp( $post['timestamp'] ); ?></span>
+								<?php endif; ?>
+							</div>
+						<?php endif; ?>
+
+						<?php if ( ! empty( $display['link_posts'] ) && ! empty( $post['original_url'] ) ): ?>
+							<a href="<?php echo esc_url( $post['original_url'] ); ?>" class="social-feed-link" target="_blank" rel="noopener noreferrer">
+								<span class="screen-reader-text"><?php esc_html_e( 'View post on', 'social-feed' ); ?> <?php echo esc_html( $feed['platform'] ); ?></span>
+							</a>
+						<?php endif; ?>
+					</div>
+				<?php endif; ?>
+			<?php endforeach; ?>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Render empty state
+	 */
+	private static function render_empty( array $feed ): string {
+		// Hide section and log warning
+		error_log( 'Social Feed: No posts found for feed ' . $feed['slug'] );
+
+		// Output empty div with data attribute for JS console warning
+		return '<div class="social-feed social-feed-empty" data-feed-error="no_posts"></div>';
+	}
+
+	/**
+	 * Render error state
+	 */
+	private static function render_error( string $message ): string {
+		error_log( 'Social Feed Error: ' . $message );
+		return '<div class="social-feed social-feed-error" data-feed-error="' . esc_attr( $message ) . '"></div>';
+	}
+
+	/**
+	 * Format timestamp for display
+	 */
+	private static function format_timestamp( string $timestamp ): string {
+		$time = strtotime( $timestamp );
+		if ( false === $time ) {
+			return '';
+		}
+
+		$now = current_time( 'timestamp' );
+		$diff = $now - $time;
+
+		if ( $diff < 60 ) {
+			return __( 'Just now', 'social-feed' );
+		}
+		if ( $diff < 3600 ) {
+			return sprintf( _n( '%d minute ago', '%d minutes ago', floor( $diff / 60 ), 'social-feed' ), floor( $diff / 60 ) );
+		}
+		if ( $diff < 86400 ) {
+			return sprintf( _n( '%d hour ago', '%d hours ago', floor( $diff / 3600 ), 'social-feed' ), floor( $diff / 3600 ) );
+		}
+		if ( $diff < 604800 ) {
+			return sprintf( _n( '%d day ago', '%d days ago', floor( $diff / 86400 ), 'social-feed' ), floor( $diff / 86400 ) );
+		}
+
+		return date_i18n( get_option( 'date_format' ), $time );
+	}
+
+}

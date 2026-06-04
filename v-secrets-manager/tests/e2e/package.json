@@ -1,0 +1,14 @@
+{
+	"name": "v-secrets-manager-e2e",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"test": "playwright test",
+		"test:headed": "playwright test --headed",
+		"playground": "npx @wp-playground/cli@latest server --auto-mount --port=9400"
+	},
+	"devDependencies": {
+		"@playwright/test": "^1.52.0",
+		"@wp-playground/cli": "^1.6.3"
+	}
+}

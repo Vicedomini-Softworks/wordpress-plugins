@@ -1,0 +1,146 @@
+/* Social Feed - Base Styles */
+
+.social-feed {
+	--sf-gap: 16px;
+	--sf-radius: 8px;
+	--sf-font: inherit;
+	container-type: inline-size;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.social-feed-empty,
+.social-feed-error {
+	display: none;
+}
+
+/* ── Grid ── */
+.social-feed-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: var(--sf-gap);
+}
+
+@container (max-width: 480px) {
+	.social-feed-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+@container (min-width: 481px) and (max-width: 720px) {
+	.social-feed-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+/* ── Column ── */
+.social-feed-column {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sf-gap);
+}
+
+/* ── Masonry ── */
+.social-feed-masonry {
+	columns: 3;
+	column-gap: var(--sf-gap);
+}
+
+.social-feed-masonry .social-feed-item {
+	break-inside: avoid;
+	margin-bottom: var(--sf-gap);
+}
+
+@container (max-width: 480px) {
+	.social-feed-masonry { columns: 1; }
+}
+
+@container (min-width: 481px) and (max-width: 720px) {
+	.social-feed-masonry { columns: 2; }
+}
+
+/* ── Carousel ── */
+.social-feed-carousel {
+	display: flex;
+	overflow-x: auto;
+	gap: var(--sf-gap);
+	scroll-snap-type: x mandatory;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: thin;
+}
+
+.social-feed-carousel .social-feed-item {
+	flex: 0 0 280px;
+	scroll-snap-align: start;
+}
+
+/* ── Item ── */
+.social-feed-item {
+	border-radius: var(--sf-radius);
+	overflow: hidden;
+	position: relative;
+}
+
+.social-feed-item .social-feed-media {
+	width: 100%;
+	aspect-ratio: 1;
+	overflow: hidden;
+}
+
+.social-feed-item .social-feed-media a {
+	display: block;
+	height: 100%;
+}
+
+.social-feed-item .social-feed-media img,
+.social-feed-item .social-feed-media video {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform 0.2s ease;
+}
+
+.social-feed-item:hover .social-feed-media img,
+.social-feed-item:hover .social-feed-media video {
+	transform: scale(1.03);
+}
+
+.social-feed-item .social-feed-caption {
+	padding: 8px 10px;
+	font-size: 0.875rem;
+	line-height: 1.5;
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.social-feed-item .social-feed-meta {
+	display: flex;
+	gap: 8px;
+	padding: 4px 10px 10px;
+	font-size: 0.75rem;
+	align-items: center;
+}
+
+.social-feed-item .social-feed-username {
+	font-weight: 600;
+}
+
+.social-feed-item .social-feed-link {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+}
+
+/* Embed items */
+.social-feed-embed {
+	display: flex;
+	justify-content: center;
+}
+
+.social-feed-embed iframe,
+.social-feed-embed blockquote {
+	max-width: 100%;
+}
