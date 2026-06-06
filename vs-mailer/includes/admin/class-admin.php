@@ -21,7 +21,7 @@ class VS_Mailer_Admin {
 			wp_die( esc_html__( 'Permission denied.', 'vs-mailer' ) );
 		}
 
-		$active_tab = isset( $_GET['tab'] ) ? sanitize_key( $_GET['tab'] ) : 'settings';
+		$active_tab = isset( $_GET['tab'] ) ? sanitize_key( $_GET['tab'] ) : 'settings'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		echo '<div class="wrap">';
 		echo '<h1>' . esc_html__( 'VS Mailer', 'vs-mailer' ) . '</h1>';
@@ -193,10 +193,12 @@ class VS_Mailer_Admin {
 
 		$result = wp_mail( $to_email, $subject, $message, array( 'Content-Type: text/html' ) );
 
-		/* translators: %s: recipient email address */
-		$result_msg = $result
-			? rawurlencode( sprintf( __( 'Test email sent to %s.', 'vs-mailer' ), $to_email ) )
-			: rawurlencode( __( 'Failed to send test email.', 'vs-mailer' ) );
+		if ( $result ) {
+			/* translators: %s: recipient email address */
+			$result_msg = rawurlencode( sprintf( __( 'Test email sent to %s.', 'vs-mailer' ), $to_email ) );
+		} else {
+			$result_msg = rawurlencode( __( 'Failed to send test email.', 'vs-mailer' ) );
+		}
 
 		$redirect = add_query_arg(
 			array(
