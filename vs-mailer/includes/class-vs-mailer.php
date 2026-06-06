@@ -128,7 +128,7 @@ class VS_Mailer {
 			return $result;
 		}
 
-		return $null;
+		return $pre_wp_mail;
 	}
 
 	/**

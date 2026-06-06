@@ -7,7 +7,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// $platform from admin controller (may be empty)
+// $platform and $connected are injected by class-admin.php before including this view.
+$platform  = $platform ?? '';  // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+$connected = $connected ?? false;  // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $platforms = array(
 	'instagram' => array(
 		'name' => 'Instagram',
@@ -51,13 +53,13 @@ $active = $platform && isset( $platforms[ $platform ] ) ? $platform : key( $plat
 		</div>
 	<?php endif; ?>
 
-	<?php if ( isset( $_GET['saved'] ) ) : ?>
+	<?php if ( isset( $_GET['saved'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
 		<div class="notice notice-success is-dismissible">
 			<p><?php esc_html_e( 'Credentials saved successfully!', 'social-feed' ); ?></p>
 		</div>
 	<?php endif; ?>
 
-	<?php if ( isset( $_GET['reset'] ) ) : ?>
+	<?php if ( isset( $_GET['reset'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
 		<div class="notice notice-success is-dismissible">
 			<p><?php esc_html_e( 'Cache cleared successfully!', 'social-feed' ); ?></p>
 		</div>

@@ -62,7 +62,7 @@ class Social_Feed_Admin {
 	 * Add/edit feed page
 	 */
 	public static function page_add_feed(): void {
-		$slug = isset( $_GET['edit'] ) ? sanitize_key( $_GET['edit'] ) : '';
+		$slug = isset( $_GET['edit'] ) ? sanitize_key( $_GET['edit'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$feed = $slug ? Social_Feed_Feed_Repository::get( $slug ) : null;
 
 		require_once SOCIAL_FEED_PLUGIN_DIR . 'includes/admin/views/feed-edit.php';
@@ -72,8 +72,8 @@ class Social_Feed_Admin {
 	 * Platform settings page
 	 */
 	public static function page_platform_settings(): void {
-		$platform  = isset( $_GET['platform'] ) ? sanitize_key( $_GET['platform'] ) : '';
-		$connected = isset( $_GET['connected'] );
+		$platform  = isset( $_GET['platform'] ) ? sanitize_key( $_GET['platform'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$connected = isset( $_GET['connected'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		require_once SOCIAL_FEED_PLUGIN_DIR . 'includes/admin/views/platform-settings.php';
 	}

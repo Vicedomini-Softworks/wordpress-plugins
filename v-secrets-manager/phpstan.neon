@@ -9,3 +9,11 @@ parameters:
         - vendor
         - tests
         - node_modules
+    bootstrapFiles:
+        - phpstan-bootstrap.php
+    parallel:
+        maximumNumberOfProcesses: 1
+    ignoreErrors:
+        # AWS SDK is an optional dependency (requires PHP >=8.1); guarded by class_exists() at runtime.
+        - '#(unknown class|invalid return type|Caught class) Aws\\#'
+    treatPhpDocTypesAsCertain: false

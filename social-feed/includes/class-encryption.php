@@ -22,13 +22,8 @@ class Social_Feed_Encryption {
 			return $value;
 		}
 
-		$key = self::get_key();
-		$iv  = openssl_random_pseudo_bytes( 16 );
-
-		if ( false === $iv ) {
-			return $value; // Fallback to plaintext if encryption fails
-		}
-
+		$key       = self::get_key();
+		$iv        = openssl_random_pseudo_bytes( 16 );
 		$encrypted = openssl_encrypt( $value, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv );
 
 		if ( false === $encrypted ) {
@@ -80,7 +75,7 @@ class Social_Feed_Encryption {
 		// Encrypt on save
 		add_filter(
 			'pre_update_option_' . $option_name,
-			function ( $new_value, $old_value ) use ( $option_name ) {
+			function ( $new_value, $old_value ) {
 				if ( $new_value === $old_value ) {
 					return $new_value;
 				}

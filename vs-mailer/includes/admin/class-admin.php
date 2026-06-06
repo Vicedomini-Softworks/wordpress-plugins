@@ -236,7 +236,7 @@ class VS_Mailer_Admin {
 		exit;
 	}
 
-	private static function get_masked_value( string $secret_name ): string {
+	public static function get_masked_value( string $secret_name ): string {
 		$value = vs_secrets_manager_get( $secret_name );
 		if ( empty( $value ) ) {
 			return '';

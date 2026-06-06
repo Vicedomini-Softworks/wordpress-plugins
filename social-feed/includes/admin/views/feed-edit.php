@@ -8,13 +8,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // $feed may be null (new) or array (edit)
-$is_edit  = ! empty( $feed );
-$slug     = $feed['slug'] ?? '';
-$platform = $feed['platform'] ?? 'instagram';
+$is_edit   = ! empty( $feed );
+$slug      = $feed['slug'] ?? '';
+$platform  = $feed['platform'] ?? 'instagram';
 $feed_mode = $feed['mode'] ?? 'embed';
-$account  = $feed['account'] ?? '';
-$cache_h  = $feed['cache_hours'] ?? 8;
-$display  = $feed['display'] ?? array();
+$account   = $feed['account'] ?? '';
+$cache_h   = $feed['cache_hours'] ?? 8;
+$display   = $feed['display'] ?? array();
 
 $platforms = array(
 	'instagram' => 'Instagram',

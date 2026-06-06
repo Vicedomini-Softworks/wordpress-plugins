@@ -13,13 +13,13 @@ $sf_feeds = Social_Feed_Feed_Repository::get_all();
 <div class="wrap">
 	<h1><?php esc_html_e( 'Social Feed', 'social-feed' ); ?></h1>
 
-	<?php if ( isset( $_GET['saved'] ) ) : ?>
+	<?php if ( isset( $_GET['saved'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
 		<div class="notice notice-success is-dismissible">
 			<p><?php esc_html_e( 'Feed saved successfully!', 'social-feed' ); ?></p>
 		</div>
 	<?php endif; ?>
 
-	<?php if ( isset( $_GET['deleted'] ) ) : ?>
+	<?php if ( isset( $_GET['deleted'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
 		<div class="notice notice-success is-dismissible">
 			<p><?php esc_html_e( 'Feed deleted successfully!', 'social-feed' ); ?></p>
 		</div>
@@ -68,7 +68,7 @@ $sf_feeds = Social_Feed_Feed_Repository::get_all();
 						<td>
 							<?php
 							$age = Social_Feed_Cache_Manager::get_cache_age( $slug );
-							if ( 0 == $age ) {
+							if ( 0.0 === $age ) {
 								esc_html_e( 'Not cached', 'social-feed' );
 							} else {
 								echo esc_html(
@@ -85,7 +85,7 @@ $sf_feeds = Social_Feed_Feed_Repository::get_all();
 							<code>[social_feed id="<?php echo esc_attr( $slug ); ?>" type="<?php echo esc_attr( $feed['display']['type'] ); ?>" limit="<?php echo intval( $feed['display']['limit'] ); ?>"]</code>
 						</td>
 						<td>
-							<a href="<?php echo esc_url( admin_url( 'admin.php?page=social-feed-add&edit=' . urlencode( $slug ) ) ); ?>"><?php esc_html_e( 'Edit', 'social-feed' ); ?></a>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=social-feed-add&edit=' . rawurlencode( $slug ) ) ); ?>"><?php esc_html_e( 'Edit', 'social-feed' ); ?></a>
 							|
 							<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="display:inline;" onsubmit="return confirm('<?php esc_html_e( 'Are you sure?', 'social-feed' ); ?>')">
 								<?php wp_nonce_field( 'social_feed_delete_feed' ); ?>

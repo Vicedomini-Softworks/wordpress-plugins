@@ -111,13 +111,13 @@ class VS_Secrets_Manager_Admin {
 		check_ajax_referer( 'vs_secrets_manager_ajax', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( -1 );
+			wp_die( '-1' );
 		}
 
 		$name = sanitize_key( $_POST['name'] ?? '' );
 
 		if ( empty( $name ) ) {
-			wp_die( -1 );
+			wp_die( '-1' );
 		}
 
 		$value = VS_Secrets_Manager_Secret_Manager::get( $name );

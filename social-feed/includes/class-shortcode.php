@@ -237,15 +237,15 @@ class Social_Feed_Shortcode {
 		}
 		if ( $diff < 3600 ) {
 			/* translators: %d: number of minutes */
-			return sprintf( _n( '%d minute ago', '%d minutes ago', floor( $diff / 60 ), 'social-feed' ), floor( $diff / 60 ) );
+			return sprintf( _n( '%d minute ago', '%d minutes ago', (int) floor( $diff / 60 ), 'social-feed' ), (int) floor( $diff / 60 ) );
 		}
 		if ( $diff < 86400 ) {
 			/* translators: %d: number of hours */
-			return sprintf( _n( '%d hour ago', '%d hours ago', floor( $diff / 3600 ), 'social-feed' ), floor( $diff / 3600 ) );
+			return sprintf( _n( '%d hour ago', '%d hours ago', (int) floor( $diff / 3600 ), 'social-feed' ), (int) floor( $diff / 3600 ) );
 		}
 		if ( $diff < 604800 ) {
 			/* translators: %d: number of days */
-			return sprintf( _n( '%d day ago', '%d days ago', floor( $diff / 86400 ), 'social-feed' ), floor( $diff / 86400 ) );
+			return sprintf( _n( '%d day ago', '%d days ago', (int) floor( $diff / 86400 ), 'social-feed' ), (int) floor( $diff / 86400 ) );
 		}
 
 		return date_i18n( get_option( 'date_format' ), $time );

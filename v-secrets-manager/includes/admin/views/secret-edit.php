@@ -3,12 +3,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$edit_id       = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-$is_edit       = $edit_id > 0;
-$secret        = null;
-$vsm_name      = '';
-$vsm_title     = '';
-$vsm_provider  = 'db';
+$edit_id      = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+$is_edit      = $edit_id > 0;
+$secret       = null;
+$vsm_name     = '';
+$vsm_title    = '';
+$vsm_provider = 'db';
 
 if ( $is_edit ) {
 	$secret = VS_Secrets_Manager_Secret_Manager::get_record_by_id( $edit_id );
