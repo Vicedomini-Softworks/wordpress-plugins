@@ -23,6 +23,8 @@ defined( 'SOCIAL_FEED_PLUGIN_DIR' ) || define( 'SOCIAL_FEED_PLUGIN_DIR', plugin_
 defined( 'SOCIAL_FEED_PLUGIN_URL' ) || define( 'SOCIAL_FEED_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 defined( 'SOCIAL_FEED_VERSION' ) || define( 'SOCIAL_FEED_VERSION', '1.0.0' );
 
+require_once SOCIAL_FEED_PLUGIN_DIR . 'includes/class-activator.php';
+require_once SOCIAL_FEED_PLUGIN_DIR . 'includes/class-deactivator.php';
 require_once SOCIAL_FEED_PLUGIN_DIR . 'includes/class-social-feed.php';
 
 register_activation_hook( __FILE__, array( 'Social_Feed_Activator', 'activate' ) );

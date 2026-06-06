@@ -13,8 +13,12 @@
 			"password": "password"
 		},
 		{
-			"step": "wp-cli",
-			"command": "plugin activate v-secrets-manager vs-mailer"
+			"step": "activatePlugin",
+			"pluginPath": "v-secrets-manager/v-secrets-manager.php"
+		},
+		{
+			"step": "activatePlugin",
+			"pluginPath": "vs-mailer/vs-mailer.php"
 		}
 	]
 }

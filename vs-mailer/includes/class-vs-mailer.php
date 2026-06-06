@@ -6,6 +6,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class VS_Mailer {
 
+	/** @var array<string, mixed> */
+	private static $pending_smtp_mail = array();
+
 	public static function init(): void {
 		load_plugin_textdomain(
 			'vs-mailer',
@@ -50,6 +53,9 @@ class VS_Mailer {
 
 		add_action( 'phpmailer_init', array( __CLASS__, 'configure_phpmailer' ) );
 		add_filter( 'pre_wp_mail', array( __CLASS__, 'handle_pre_wp_mail' ), 10, 2 );
+
+		add_filter( 'wp_mail', array( __CLASS__, 'capture_smtp_mail_data' ), 1 );
+		add_action( 'wp_mail_failed', array( __CLASS__, 'log_smtp_failure' ) );
 
 		if ( is_admin() ) {
 			add_action( 'admin_menu', array( 'VS_Mailer_Admin', 'register_menu' ) );
@@ -125,10 +131,42 @@ class VS_Mailer {
 		return $null;
 	}
 
+	/**
+	 * Capture mail data before SMTP send so wp_mail_failed can log it.
+	 *
+	 * @param array<string, mixed> $args
+	 * @return array<string, mixed>
+	 */
+	public static function capture_smtp_mail_data( array $args ): array {
+		if ( 'smtp' === get_option( 'vs_mailer_mailer', 'smtp' ) ) {
+			self::$pending_smtp_mail = $args;
+		} else {
+			self::$pending_smtp_mail = array();
+		}
+		return $args;
+	}
+
+	public static function log_smtp_failure( \WP_Error $wp_error ): void {
+		if ( empty( self::$pending_smtp_mail ) ) {
+			return;
+		}
+		$to = self::$pending_smtp_mail['to'] ?? '';
+		VS_Mailer_Logger::log(
+			is_array( $to ) ? implode( ', ', $to ) : (string) $to,
+			(string) ( self::$pending_smtp_mail['subject'] ?? '' ),
+			'smtp',
+			false,
+			$wp_error->get_error_message()
+		);
+		self::$pending_smtp_mail = array();
+	}
+
 	public static function enqueue_admin_assets( string $hook ): void {
 		if ( false === strpos( $hook, 'vs-mailer' ) ) {
 			return;
 		}
+
+		wp_enqueue_script( 'wp-api-request' );
 
 		wp_enqueue_style(
 			'vs-mailer-admin',

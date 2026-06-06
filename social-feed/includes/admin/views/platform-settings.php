@@ -30,6 +30,12 @@ $active = $platform && isset( $platforms[ $platform ] ) ? $platform : key( $plat
 		</div>
 	<?php endif; ?>
 
+	<?php if ( isset( $_GET['saved'] ) ): ?>
+		<div class="notice notice-success is-dismissible">
+			<p><?php esc_html_e( 'Credentials saved successfully!', 'social-feed' ); ?></p>
+		</div>
+	<?php endif; ?>
+
 	<?php if ( isset( $_GET['reset'] ) ): ?>
 		<div class="notice notice-success is-dismissible">
 			<p><?php esc_html_e( 'Cache cleared successfully!', 'social-feed' ); ?></p>

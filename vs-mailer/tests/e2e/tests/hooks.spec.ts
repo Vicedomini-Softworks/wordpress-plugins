@@ -83,9 +83,11 @@ test.describe( 'Settings API — options stored correctly', () => {
 		await login( page );
 	} );
 
-	test( 'wp_options are set after saving SMTP config', async ( { page, request } ) => {
+	test( 'wp_options are set after saving SMTP config', async ( { page } ) => {
 		await page.goto( ADMIN_URL );
 
+		// Ensure SMTP section is visible regardless of prior test state.
+		await page.selectOption( 'select[name="vs_mailer_mailer"]', 'smtp' );
 		await page.fill( 'input[name="vs_mailer_from_name"]', 'API Test' );
 		await page.fill( 'input[name="vs_mailer_smtp_host"]', 'smtp.api-test.com' );
 		await page.click( 'input[type="submit"][value="Save Settings"]' );
@@ -93,7 +95,7 @@ test.describe( 'Settings API — options stored correctly', () => {
 
 		const nonce = await getNonce( page );
 
-		const res = await request.get(
+		const res = await page.request.get(
 			'/wp-json/wp/v2/settings',
 			{ headers: { 'X-WP-Nonce': nonce } }
 		);
@@ -137,6 +139,6 @@ test.describe( 'Plugin activation and dependency', () => {
 		await login( page );
 		await page.goto( '/wp-admin/plugins.php' );
 
-		await expect( page.locator( 'tr[data-slug="v-secrets-manager"] .active' ) ).toBeVisible();
+		await expect( page.locator( 'tr[data-plugin="v-secrets-manager/v-secrets-manager.php"].active' ) ).toBeVisible();
 	} );
 } );

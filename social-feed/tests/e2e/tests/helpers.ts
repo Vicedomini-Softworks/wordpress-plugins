@@ -40,6 +40,26 @@ export async function createPageWithShortcode(
 }
 
 /**
+ * Delete all feeds from the feeds list — used for test isolation.
+ */
+export async function deleteAllFeeds( page: Page ): Promise<void> {
+	while ( true ) {
+		await page.goto( '/wp-admin/admin.php?page=social-feed' );
+		await page.waitForLoadState( 'networkidle' );
+		const btn = page.locator( 'button.delete' ).first();
+		if ( ( await btn.count() ) === 0 ) break;
+		// Remove onsubmit confirm handler to avoid dialog
+		await page.evaluate( () => {
+			document.querySelectorAll( 'form[onsubmit]' ).forEach(
+				( f ) => ( f as HTMLFormElement ).removeAttribute( 'onsubmit' )
+			);
+		} );
+		await btn.click();
+		await page.waitForLoadState( 'networkidle' );
+	}
+}
+
+/**
  * Create a social-feed feed via admin form and return the feed slug.
  */
 export async function createFeed(

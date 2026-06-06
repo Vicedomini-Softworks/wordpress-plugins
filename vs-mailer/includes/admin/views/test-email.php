@@ -29,11 +29,13 @@ $message = isset( $_GET['message'] ) ? sanitize_text_field( wp_unslash( $_GET['m
 		<tr>
 			<th scope="row"><?php esc_html_e( 'Send To', 'vs-mailer' ); ?></th>
 			<td>
-				<input type="email" name="test_email" value="" class="regular-text" required>
+				<input type="email" name="test_email" value="" class="regular-text">
 				<p class="description"><?php esc_html_e( 'The email address that will receive the test.', 'vs-mailer' ); ?></p>
 			</td>
 		</tr>
 	</table>
 
-	<?php submit_button( __( 'Send Test Email', 'vs-mailer' ) ); ?>
+	<p class="submit">
+		<button type="submit" class="button button-primary"><?php esc_html_e( 'Send Test Email', 'vs-mailer' ); ?></button>
+	</p>
 </form>

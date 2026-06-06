@@ -23,6 +23,8 @@ defined( 'VS_MAILER_PLUGIN_DIR' ) || define( 'VS_MAILER_PLUGIN_DIR', plugin_dir_
 defined( 'VS_MAILER_PLUGIN_URL' ) || define( 'VS_MAILER_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 defined( 'VS_MAILER_VERSION' ) || define( 'VS_MAILER_VERSION', '1.0.0' );
 
+require_once VS_MAILER_PLUGIN_DIR . 'includes/class-activator.php';
+require_once VS_MAILER_PLUGIN_DIR . 'includes/class-deactivator.php';
 require_once VS_MAILER_PLUGIN_DIR . 'includes/class-vs-mailer.php';
 
 register_activation_hook( __FILE__, array( 'VS_Mailer_Activator', 'activate' ) );

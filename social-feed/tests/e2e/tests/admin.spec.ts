@@ -1,9 +1,16 @@
 import { test, expect } from '@playwright/test';
-import { login, createFeed } from './helpers';
+import { login, createFeed, deleteAllFeeds } from './helpers';
 
 const PLATFORMS = [ 'instagram', 'facebook', 'tiktok', 'x', 'threads', 'bluesky', 'youtube' ];
 
 test.describe( 'Admin — Feeds', () => {
+
+	test.beforeAll( async ( { browser } ) => {
+		const page = await browser.newPage();
+		await login( page );
+		await deleteAllFeeds( page );
+		await page.close();
+	} );
 
 	test.beforeEach( async ( { page } ) => {
 		await login( page );
@@ -65,7 +72,7 @@ test.describe( 'Admin — Feeds', () => {
 			limit: 4,
 		} );
 
-		await expect( page ).toHaveURL( /page=social-feed.*saved=1/ );
+		await expect( page.locator( '.notice-success' ) ).toBeVisible();
 
 		const row = page.locator( 'tr', { hasText: 'test-yt' } );
 		await expect( row ).toBeVisible();
@@ -100,7 +107,7 @@ test.describe( 'Admin — Feeds', () => {
 		await row.locator( 'button.delete' ).click();
 		await page.waitForLoadState( 'networkidle' );
 
-		await expect( page ).toHaveURL( /deleted=1/ );
+		await expect( page.locator( '.notice-success' ) ).toBeVisible();
 		await expect( page.locator( 'tr', { hasText: 'delete-me' } ) ).not.toBeVisible();
 	} );
 
@@ -153,7 +160,6 @@ test.describe( 'Admin — Platform Settings', () => {
 		await page.click( 'button[name="social_feed_save_platform"]' );
 		await page.waitForLoadState( 'networkidle' );
 
-		await expect( page ).toHaveURL( /saved=1/ );
 		await expect( page.locator( '.notice-success' ) ).toBeVisible();
 	} );
 

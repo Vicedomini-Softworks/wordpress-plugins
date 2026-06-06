@@ -15,6 +15,39 @@ on:
       - published
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: vs-mailer
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: vs-mailer/vendor
+          key: composer-vs-mailer-${{ hashFiles('vs-mailer/composer.lock') }}
+          restore-keys: composer-vs-mailer-
+
+      - name: Install Composer dependencies
+        run: composer install --optimize-autoloader
+
+      - name: Run PHPCS
+        run: composer run phpcs
+
+      - name: Run PHPStan
+        run: composer run phpstan
+
   test-e2e:
     runs-on: ubuntu-latest
 
@@ -52,7 +85,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    needs: test-e2e
+    needs: [lint, test-e2e]
 
     defaults:
       run:
@@ -71,37 +104,40 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-dev --optimize-autoloader
 
-      - name: Run PHPCS
-        run: composer run phpcs || true
-
-      - name: Run PHPStan
-        run: composer run phpstan || true
+      - name: Get plugin version
+        id: version
+        run: echo "version=$(grep -oP '(?<=\* Version: )\S+' vs-mailer.php)" >> $GITHUB_OUTPUT
 
       - name: Build plugin ZIP
         run: |
           PLUGIN_SLUG="vs-mailer"
+          VERSION="${{ steps.version.outputs.version }}"
           BUILD_DIR="${PLUGIN_SLUG}-build"
           mkdir -p "${BUILD_DIR}/${PLUGIN_SLUG}"
-          rsync -av \
+          rsync -a \
             --exclude='.git' \
             --exclude='.github' \
             --exclude='node_modules' \
             --exclude='tests' \
             --exclude='composer.json' \
             --exclude='composer.lock' \
+            --exclude='phpcs.xml' \
+            --exclude='phpstan.neon' \
+            --exclude='.gitignore' \
+            --exclude='.gitattributes' \
             . "${BUILD_DIR}/${PLUGIN_SLUG}/"
           cd "${BUILD_DIR}"
-          zip -r "../${PLUGIN_SLUG}.zip" "${PLUGIN_SLUG}"
+          zip -r "../${PLUGIN_SLUG}-${VERSION}.zip" "${PLUGIN_SLUG}"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: vs-mailer
-          path: vs-mailer/vs-mailer.zip
-          retention-days: 7
+          name: vs-mailer-${{ steps.version.outputs.version }}
+          path: vs-mailer/vs-mailer-${{ steps.version.outputs.version }}.zip
+          retention-days: 30
 
       - name: Upload to Release
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
         with:
-          files: vs-mailer/vs-mailer.zip
+          files: vs-mailer/vs-mailer-${{ steps.version.outputs.version }}.zip

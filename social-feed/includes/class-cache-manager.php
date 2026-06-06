@@ -26,13 +26,16 @@ class Social_Feed_Cache_Manager {
 		$cache_key = 'social_feed_cache_' . $feed_slug;
 		$expiration = $hours * HOUR_IN_SECONDS;
 
-		return set_transient( $cache_key, $data, $expiration );
+		set_transient( $cache_key, $data, $expiration );
+		update_option( 'social_feed_cache_created_' . $feed_slug, time(), false );
+		return true;
 	}
 
 	/**
 	 * Delete cached feed data
 	 */
 	public static function delete( string $feed_slug ): bool {
+		delete_option( 'social_feed_cache_created_' . $feed_slug );
 		$cache_key = 'social_feed_cache_' . $feed_slug;
 		return delete_transient( $cache_key );
 	}
@@ -106,15 +109,16 @@ class Social_Feed_Cache_Manager {
 	 * Get cache age in hours
 	 */
 	public static function get_cache_age( string $feed_slug ): float {
-		$cache_key = 'social_feed_cache_' . $feed_slug;
-		$created   = get_option( '_transient_' . $cache_key );
-
-		if ( false === $created ) {
-			return 0;
+		if ( false === get_transient( 'social_feed_cache_' . $feed_slug ) ) {
+			return 0.0;
 		}
 
-		$age_seconds = time() - $created;
-		return round( $age_seconds / HOUR_IN_SECONDS, 1 );
+		$created = get_option( 'social_feed_cache_created_' . $feed_slug, 0 );
+		if ( ! $created ) {
+			return 1.0;
+		}
+
+		return round( ( time() - (int) $created ) / HOUR_IN_SECONDS, 1 );
 	}
 
 	/**

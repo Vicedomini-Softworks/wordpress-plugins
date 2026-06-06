@@ -11,7 +11,7 @@ $feeds = Social_Feed_Feed_Repository::get_all();
 ?>
 
 <div class="wrap">
-	<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+	<h1><?php esc_html_e( 'Social Feed', 'social-feed' ); ?></h1>
 
 	<?php if ( isset( $_GET['saved'] ) ): ?>
 		<div class="notice notice-success is-dismissible">
@@ -54,7 +54,7 @@ $feeds = Social_Feed_Feed_Repository::get_all();
 							<strong><?php echo esc_html( $slug ); ?></strong>
 						</td>
 						<td>
-							<?php echo esc_html( ucfirst( $feed['platform'] ) ); ?>
+							<?php echo esc_html( $feed['platform'] ); ?>
 						</td>
 						<td>
 							<?php echo 'oauth' === $feed['mode'] ? esc_html__( 'OAuth', 'social-feed' ) : esc_html__( 'Embed', 'social-feed' ); ?>
@@ -68,7 +68,7 @@ $feeds = Social_Feed_Feed_Repository::get_all();
 						<td>
 							<?php
 							$age = Social_Feed_Cache_Manager::get_cache_age( $slug );
-							if ( 0 === $age ) {
+							if ( 0 == $age ) {
 								esc_html_e( 'Not cached', 'social-feed' );
 							} else {
 								printf(

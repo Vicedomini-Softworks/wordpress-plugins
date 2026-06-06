@@ -1,7 +1,7 @@
 import { defineConfig } from '@playwright/test';
 import path from 'path';
 
-const PLAYGROUND_URL = process.env.PLAYGROUND_URL || 'http://localhost:9400';
+const PLAYGROUND_URL = process.env.PLAYGROUND_URL || 'http://127.0.0.1:9400';
 const PLUGIN_DIR   = path.resolve( __dirname, '../../' );
 const BLUEPRINT    = path.resolve( __dirname, 'blueprint.json' );
 
@@ -20,9 +20,9 @@ export default defineConfig( {
 		headless: true,
 	},
 	webServer: {
-		command: `npx --yes @wp-playground/cli@latest start --path="${ PLUGIN_DIR }" --port=9400 --php=8.0 --blueprint="${ BLUEPRINT }" --skip-browser`,
-		url: PLAYGROUND_URL,
-		reuseExistingServer: true,
+		command: `node ./node_modules/@wp-playground/cli/wp-playground.js server --mount="${ PLUGIN_DIR }:/wordpress/wp-content/plugins/v-secrets-manager" --port=9400 --php=8.0 --wp=6.9 --blueprint="${ BLUEPRINT }"`,
+		url: `${ PLAYGROUND_URL }/wp-includes/js/jquery/jquery.min.js`,
+		reuseExistingServer: ! process.env.CI,
 		timeout: 120000,
 	},
 } );

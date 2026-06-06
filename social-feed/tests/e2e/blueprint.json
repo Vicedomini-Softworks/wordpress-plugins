@@ -13,8 +13,12 @@
 			"password": "password"
 		},
 		{
-			"step": "wp-cli",
-			"command": "plugin activate v-secrets-manager social-feed"
+			"step": "activatePlugin",
+			"pluginPath": "v-secrets-manager/v-secrets-manager.php"
+		},
+		{
+			"step": "activatePlugin",
+			"pluginPath": "social-feed/social-feed.php"
 		}
 	]
 }

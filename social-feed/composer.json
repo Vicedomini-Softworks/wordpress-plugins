@@ -7,16 +7,16 @@
 		"php": ">=7.2.24"
 	},
 	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
 		"squizlabs/php_codesniffer": "^3.0",
 		"wp-coding-standards/wpcs": "^3.0",
 		"phpstan/phpstan": "^1.0",
 		"szepeviktor/phpstan-wordpress": "^1.0"
 	},
 	"scripts": {
-		"phpcs": "phpcs --standard=WordPress .",
-		"phpcbf": "phpcbf --standard=WordPress .",
-		"phpstan": "phpstan analyse --level=5 .",
-		"test": "phpunit"
+		"phpcs": "phpcs",
+		"phpcbf": "phpcbf",
+		"phpstan": "phpstan analyse"
 	},
 	"config": {
 		"allow-plugins": {

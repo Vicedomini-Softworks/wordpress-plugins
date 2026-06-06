@@ -106,13 +106,11 @@ class VS_Mailer_Admin {
 			);
 		}
 
-		if ( isset( $_POST['vs_mailer_log_emails'] ) ) {
-			update_option(
-				'vs_mailer_log_emails',
-				'yes' === sanitize_key( $_POST['vs_mailer_log_emails'] ) ? 'yes' : 'no',
-				false
-			);
-		}
+		update_option(
+			'vs_mailer_log_emails',
+			isset( $_POST['vs_mailer_log_emails'] ) && 'yes' === sanitize_key( $_POST['vs_mailer_log_emails'] ) ? 'yes' : 'no',
+			false
+		);
 
 		if ( isset( $_POST['vs_mailer_smtp_password'] ) && ! empty( $_POST['vs_mailer_smtp_password'] ) ) {
 			VS_Secrets_Manager_Secret_Manager::set(
@@ -255,7 +253,7 @@ class VS_Mailer_Admin {
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="margin-bottom:1em;">
 				<input type="hidden" name="action" value="vs_mailer_clear_log">
 				<?php wp_nonce_field( 'vs_mailer_clear_log' ); ?>
-				<?php submit_button( __( 'Clear Log', 'vs-mailer' ), 'delete', 'submit', false ); ?>
+				<button type="submit" class="button button-delete"><?php esc_html_e( 'Clear Log', 'vs-mailer' ); ?></button>
 			</form>
 
 			<table class="widefat fixed striped">

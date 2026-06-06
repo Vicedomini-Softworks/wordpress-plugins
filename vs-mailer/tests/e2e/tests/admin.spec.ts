@@ -44,7 +44,7 @@ test.describe( 'Admin UI — page rendering', () => {
 	test( 'test email tab renders form', async ( { page } ) => {
 		await page.goto( ADMIN_URL + '&tab=test' );
 		await expect( page.locator( '.nav-tab-active' ) ).toContainText( 'Test Email' );
-		await expect( page.locator( 'h2' ) ).toContainText( 'Send a Test Email' );
+		await expect( page.locator( 'h2:not(.nav-tab-wrapper)' ) ).toContainText( 'Send a Test Email' );
 		await expect( page.locator( 'input[name="test_email"]' ) ).toBeVisible();
 		await expect( page.locator( 'button:has-text("Send Test Email")' ) ).toBeVisible();
 	} );
@@ -52,7 +52,7 @@ test.describe( 'Admin UI — page rendering', () => {
 	test( 'log tab renders empty state', async ( { page } ) => {
 		await page.goto( ADMIN_URL + '&tab=log' );
 		await expect( page.locator( '.nav-tab-active' ) ).toContainText( 'Log' );
-		await expect( page.locator( 'h2' ) ).toContainText( 'Email Log' );
+		await expect( page.locator( 'h2:not(.nav-tab-wrapper)' ) ).toContainText( 'Email Log' );
 	} );
 
 	test( 'default mailer is SMTP with visible section', async ( { page } ) => {
@@ -225,8 +225,14 @@ test.describe( 'Admin UI — log page', () => {
 	} );
 
 	test( 'log shows entries after email is sent with logging enabled', async ( { page } ) => {
-		await page.goto( ADMIN_URL );
+		// Clear any pre-existing log entries for isolation.
+		await page.goto( ADMIN_URL + '&tab=log' );
+		if ( await page.locator( 'button:has-text("Clear Log")' ).isVisible() ) {
+			await page.click( 'button:has-text("Clear Log")' );
+			await page.waitForLoadState( 'networkidle' );
+		}
 
+		await page.goto( ADMIN_URL );
 		await page.check( 'input[name="vs_mailer_log_emails"]' );
 		await page.click( 'input[type="submit"][value="Save Settings"]' );
 		await page.waitForLoadState( 'networkidle' );
@@ -241,8 +247,14 @@ test.describe( 'Admin UI — log page', () => {
 	} );
 
 	test( 'clear log button empties the log', async ( { page } ) => {
-		await page.goto( ADMIN_URL );
+		// Clear any pre-existing log entries for isolation.
+		await page.goto( ADMIN_URL + '&tab=log' );
+		if ( await page.locator( 'button:has-text("Clear Log")' ).isVisible() ) {
+			await page.click( 'button:has-text("Clear Log")' );
+			await page.waitForLoadState( 'networkidle' );
+		}
 
+		await page.goto( ADMIN_URL );
 		await page.check( 'input[name="vs_mailer_log_emails"]' );
 		await page.click( 'input[type="submit"][value="Save Settings"]' );
 		await page.waitForLoadState( 'networkidle' );
