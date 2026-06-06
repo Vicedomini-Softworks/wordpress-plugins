@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# Pre-commit: run phpcs + phpstan on all three plugins. Blocks commit on any failure.
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+PLUGINS=("v-secrets-manager" "vs-mailer" "social-feed")
+
+PASS=0
+FAIL=0
+
+run_check() {
+    local plugin="$1"
+    local tool="$2"
+    local dir="$REPO_ROOT/$plugin"
+
+    printf "\n[%s] composer run %s ...\n" "$plugin" "$tool"
+
+    if composer -d "$dir" run "$tool" 2>&1; then
+        PASS=$((PASS + 1))
+    else
+        printf "\n[FAIL] %s / %s\n" "$plugin" "$tool"
+        FAIL=$((FAIL + 1))
+    fi
+}
+
+for plugin in "${PLUGINS[@]}"; do
+    run_check "$plugin" phpcs
+    run_check "$plugin" phpstan
+done
+
+echo ""
+printf "Results: %d passed, %d failed\n" "$PASS" "$FAIL"
+
+if [ "$FAIL" -gt 0 ]; then
+    echo "Commit blocked — fix lint errors above then try again."
+    exit 1
+fi
+
+exit 0
