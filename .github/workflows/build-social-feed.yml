@@ -7,9 +7,11 @@ on:
       - develop
     paths:
       - 'social-feed/**'
+      - '.github/workflows/build-social-feed.yml'
   pull_request:
     paths:
       - 'social-feed/**'
+      - '.github/workflows/build-social-feed.yml'
   release:
     types:
       - published

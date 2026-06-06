@@ -7,9 +7,11 @@ on:
       - develop
     paths:
       - 'vs-mailer/**'
+      - '.github/workflows/build-vs-mailer.yml'
   pull_request:
     paths:
       - 'vs-mailer/**'
+      - '.github/workflows/build-vs-mailer.yml'
   release:
     types:
       - published
