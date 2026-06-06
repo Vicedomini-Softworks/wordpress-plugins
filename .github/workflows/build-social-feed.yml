@@ -2,9 +2,6 @@ name: Build Social Feed
 
 on:
   push:
-    branches:
-      - main
-      - develop
     paths:
       - 'social-feed/**'
       - '.github/workflows/build-social-feed.yml'
@@ -88,6 +85,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs: [lint, test-e2e]
+    if: |
+      github.event_name == 'release' ||
+      (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'))
 
     defaults:
       run:
@@ -126,6 +126,7 @@ jobs:
             --exclude='composer.lock' \
             --exclude='phpcs.xml' \
             --exclude='phpstan.neon' \
+            --exclude='phpstan-bootstrap.php' \
             --exclude='.gitignore' \
             --exclude='.gitattributes' \
             . "${BUILD_DIR}/${PLUGIN_SLUG}/"
