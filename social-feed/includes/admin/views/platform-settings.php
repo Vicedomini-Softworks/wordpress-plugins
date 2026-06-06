@@ -9,13 +9,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // $platform from admin controller (may be empty)
 $platforms = array(
-	'instagram' => array( 'name' => 'Instagram', 'note' => 'Requires Meta Business/Creator account + App Review.' ),
-	'facebook'  => array( 'name' => 'Facebook',  'note' => 'Requires Facebook Page + App Review.' ),
-	'tiktok'    => array( 'name' => 'TikTok',    'note' => 'Requires TikTok Developer account + sandbox/production audit.' ),
-	'x'         => array( 'name' => 'X',          'note' => '' ),
-	'threads'   => array( 'name' => 'Threads',   'note' => 'Uses same Meta app as Instagram/Facebook.' ),
-	'bluesky'   => array( 'name' => 'Bluesky',   'note' => 'Free, no App Review required.' ),
-	'youtube'   => array( 'name' => 'YouTube',   'note' => 'Free. 10,000 API units/day quota.' ),
+	'instagram' => array(
+		'name' => 'Instagram',
+		'note' => 'Requires Meta Business/Creator account + App Review.',
+	),
+	'facebook'  => array(
+		'name' => 'Facebook',
+		'note' => 'Requires Facebook Page + App Review.',
+	),
+	'tiktok'    => array(
+		'name' => 'TikTok',
+		'note' => 'Requires TikTok Developer account + sandbox/production audit.',
+	),
+	'x'         => array(
+		'name' => 'X',
+		'note' => '',
+	),
+	'threads'   => array(
+		'name' => 'Threads',
+		'note' => 'Uses same Meta app as Instagram/Facebook.',
+	),
+	'bluesky'   => array(
+		'name' => 'Bluesky',
+		'note' => 'Free, no App Review required.',
+	),
+	'youtube'   => array(
+		'name' => 'YouTube',
+		'note' => 'Free. 10,000 API units/day quota.',
+	),
 );
 
 $active = $platform && isset( $platforms[ $platform ] ) ? $platform : key( $platforms );
@@ -24,26 +45,26 @@ $active = $platform && isset( $platforms[ $platform ] ) ? $platform : key( $plat
 <div class="wrap">
 	<h1><?php esc_html_e( 'Platform Settings', 'social-feed' ); ?></h1>
 
-	<?php if ( $connected ): ?>
+	<?php if ( $connected ) : ?>
 		<div class="notice notice-success is-dismissible">
 			<p><?php esc_html_e( 'Account connected successfully!', 'social-feed' ); ?></p>
 		</div>
 	<?php endif; ?>
 
-	<?php if ( isset( $_GET['saved'] ) ): ?>
+	<?php if ( isset( $_GET['saved'] ) ) : ?>
 		<div class="notice notice-success is-dismissible">
 			<p><?php esc_html_e( 'Credentials saved successfully!', 'social-feed' ); ?></p>
 		</div>
 	<?php endif; ?>
 
-	<?php if ( isset( $_GET['reset'] ) ): ?>
+	<?php if ( isset( $_GET['reset'] ) ) : ?>
 		<div class="notice notice-success is-dismissible">
 			<p><?php esc_html_e( 'Cache cleared successfully!', 'social-feed' ); ?></p>
 		</div>
 	<?php endif; ?>
 
 	<nav class="nav-tab-wrapper">
-		<?php foreach ( $platforms as $slug => $info ): ?>
+		<?php foreach ( $platforms as $slug => $info ) : ?>
 			<a
 				href="<?php echo esc_url( admin_url( 'admin.php?page=social-feed-platform-settings&platform=' . $slug ) ); ?>"
 				class="nav-tab <?php echo $slug === $active ? 'nav-tab-active' : ''; ?>"
@@ -60,25 +81,26 @@ $active = $platform && isset( $platforms[ $platform ] ) ? $platform : key( $plat
 		<?php endforeach; ?>
 	</nav>
 
-	<?php if ( $active ):
+	<?php
+	if ( $active ) :
 		$meta       = get_option( 'social_feed_meta_' . $active, array() );
 		$info       = $platforms[ $active ];
 		$token      = vs_secrets_manager_get( 'social_feed_' . $active . '_access_token' );
 		$connected  = ! empty( $token ) && ( $meta['token_expiry'] ?? 0 ) > time();
 		$reset_time = $meta['cache_reset_at'] ?? 0;
 		// Mask stored client_id for display (show last 4 chars only)
-		$stored_client_id = vs_secrets_manager_get( 'social_feed_' . $active . '_client_id' ) ?? '';
+		$stored_client_id  = vs_secrets_manager_get( 'social_feed_' . $active . '_client_id' ) ?? '';
 		$display_client_id = $stored_client_id ? str_repeat( '•', max( 0, strlen( $stored_client_id ) - 4 ) ) . substr( $stored_client_id, -4 ) : '';
-	?>
+		?>
 		<div class="tab-content" style="margin-top:20px;">
 
-			<?php if ( ! empty( $info['note'] ) ): ?>
+			<?php if ( ! empty( $info['note'] ) ) : ?>
 				<div class="notice notice-info inline" style="margin-bottom:16px;">
 					<p><?php echo esc_html( $info['note'] ); ?></p>
 				</div>
 			<?php endif; ?>
 
-			<?php if ( 'x' === $active ): ?>
+			<?php if ( 'x' === $active ) : ?>
 				<div class="notice notice-warning inline" style="margin-bottom:16px;">
 					<p><strong><?php esc_html_e( 'X API Costs:', 'social-feed' ); ?></strong> <?php esc_html_e( '$0.001 per owned read, $0.005 per third-party read. OAuth mode will incur API costs on every cache miss. Consider using Embed mode to avoid costs.', 'social-feed' ); ?></p>
 				</div>
@@ -119,15 +141,20 @@ $active = $platform && isset( $platforms[ $platform ] ) ? $platform : key( $plat
 
 			<h3><?php esc_html_e( 'OAuth Connection', 'social-feed' ); ?></h3>
 
-			<?php if ( $connected ): ?>
+			<?php if ( $connected ) : ?>
 				<p>
 					<span style="color:#46b450;font-weight:bold;">&#10003; <?php esc_html_e( 'Connected', 'social-feed' ); ?></span>
-					<?php if ( ! empty( $meta['connected_at'] ) ): ?>
-						&mdash; <?php echo esc_html( sprintf(
+					<?php if ( ! empty( $meta['connected_at'] ) ) : ?>
+						&mdash; 
+						<?php
+						echo esc_html(
+							sprintf(
 							/* translators: %s: date */
-							__( 'Since %s', 'social-feed' ),
-							date_i18n( get_option( 'date_format' ), $meta['connected_at'] )
-						) ); ?>
+								__( 'Since %s', 'social-feed' ),
+								date_i18n( get_option( 'date_format' ), $meta['connected_at'] )
+							)
+						);
+						?>
 					<?php endif; ?>
 				</p>
 			<?php endif; ?>
@@ -136,21 +163,29 @@ $active = $platform && isset( $platforms[ $platform ] ) ? $platform : key( $plat
 			$auth_url = rest_url( 'social-feed/v1/oauth/' . $active . '/authorize' );
 			?>
 			<a href="<?php echo esc_url( $auth_url ); ?>" class="button button-secondary">
-				<?php echo $connected
+				<?php
+				echo $connected
 					? esc_html__( 'Reconnect Account', 'social-feed' )
-					: esc_html__( 'Connect Account', 'social-feed' ); ?>
+					: esc_html__( 'Connect Account', 'social-feed' );
+				?>
 			</a>
 
 			<hr>
 
 			<h3><?php esc_html_e( 'Cache', 'social-feed' ); ?></h3>
 
-			<?php if ( $reset_time > 0 ): ?>
-				<p><?php echo esc_html( sprintf(
+			<?php if ( $reset_time > 0 ) : ?>
+				<p>
+				<?php
+				echo esc_html(
+					sprintf(
 					/* translators: %s: date */
-					__( 'Last cleared: %s', 'social-feed' ),
-					human_time_diff( $reset_time ) . ' ' . __( 'ago', 'social-feed' )
-				) ); ?></p>
+						__( 'Last cleared: %s', 'social-feed' ),
+						human_time_diff( $reset_time ) . ' ' . __( 'ago', 'social-feed' )
+					)
+				);
+				?>
+				</p>
 			<?php endif; ?>
 
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">

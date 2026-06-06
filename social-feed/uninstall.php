@@ -41,11 +41,11 @@ if ( is_dir( $cache_dir ) ) {
 		RecursiveIteratorIterator::CHILD_FIRST
 	);
 
-	foreach ( $iterator as $path ) {
-		if ( $path->isFile() ) {
-			wp_delete_file( $path->getPathname() );
-		} elseif ( $path->isDir() ) {
-			rmdir( $path->getPathname() );
+	foreach ( $iterator as $sf_path ) {
+		if ( $sf_path->isFile() ) {
+			wp_delete_file( $sf_path->getPathname() );
+		} elseif ( $sf_path->isDir() ) {
+			rmdir( $sf_path->getPathname() );
 		}
 	}
 

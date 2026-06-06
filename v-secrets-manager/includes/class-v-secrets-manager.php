@@ -66,10 +66,14 @@ class VS_Secrets_Manager {
 			true
 		);
 
-		wp_localize_script( 'vs-secrets-manager-admin', 'vsSecretsManager', array(
-			'nonce'   => wp_create_nonce( 'wp_rest' ),
-			'ajaxNonce' => wp_create_nonce( 'vs_secrets_manager_ajax' ),
-			'restUrl' => rest_url( 'vs-secrets-manager/v1' ),
-		) );
+		wp_localize_script(
+			'vs-secrets-manager-admin',
+			'vsSecretsManager',
+			array(
+				'nonce'     => wp_create_nonce( 'wp_rest' ),
+				'ajaxNonce' => wp_create_nonce( 'vs_secrets_manager_ajax' ),
+				'restUrl'   => rest_url( 'vs-secrets-manager/v1' ),
+			)
+		);
 	}
 }

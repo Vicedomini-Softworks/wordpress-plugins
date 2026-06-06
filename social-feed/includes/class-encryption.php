@@ -49,7 +49,7 @@ class Social_Feed_Encryption {
 			return $value; // Not encrypted, return as-is
 		}
 
-		$parts  = explode( '::', $decoded, 2 );
+		$parts = explode( '::', $decoded, 2 );
 		if ( count( $parts ) !== 2 ) {
 			return $value; // Invalid format
 		}
@@ -61,7 +61,7 @@ class Social_Feed_Encryption {
 			return $value;
 		}
 
-		$key = self::get_key();
+		$key       = self::get_key();
 		$decrypted = openssl_decrypt( $encrypted, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv );
 
 		if ( false === $decrypted ) {
@@ -135,5 +135,4 @@ class Social_Feed_Encryption {
 		$decoded = base64_decode( $value, true );
 		return false !== $decoded && strpos( $decoded, '::' ) !== false;
 	}
-
 }

@@ -31,8 +31,8 @@ class Social_Feed_Bluesky_Provider extends Social_Feed_Provider {
 		$posts = array();
 		$url   = add_query_arg(
 			array(
-				'actor'  => $handle,
-				'limit'  => $limit,
+				'actor' => $handle,
+				'limit' => $limit,
 			),
 			'https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed'
 		);
@@ -48,11 +48,11 @@ class Social_Feed_Bluesky_Provider extends Social_Feed_Provider {
 		}
 
 		foreach ( $data['feed'] as $feed_item ) {
-			$post = $feed_item['post'] ?? array();
+			$post   = $feed_item['post'] ?? array();
 			$record = $post['record'] ?? array();
 			$author = $post['author'] ?? array();
 
-			$caption = $record['text'] ?? '';
+			$caption   = $record['text'] ?? '';
 			$media_url = '';
 
 			// Check for images
@@ -60,16 +60,18 @@ class Social_Feed_Bluesky_Provider extends Social_Feed_Provider {
 				$media_url = $record['embed']['images'][0]['fullsize'] ?? '';
 			}
 
-			$normalized = $this->normalize_post( array(
-				'id'          => $post['uri'] ?? '',
-				'type'        => empty( $media_url ) ? 'text' : 'image',
-				'media_url'   => $media_url,
-				'permalink'   => 'https://bsky.app/profile/' . $handle . '/post/' . self::extract_rkey( $post['uri'] ?? '' ),
-				'caption'     => $caption,
-				'username'    => '@' . ( $author['handle'] ?? $handle ),
-				'timestamp'   => $record['createdAt'] ?? '',
-				'profile_url' => 'https://bsky.app/profile/' . $handle,
-			) );
+			$normalized = $this->normalize_post(
+				array(
+					'id'          => $post['uri'] ?? '',
+					'type'        => empty( $media_url ) ? 'text' : 'image',
+					'media_url'   => $media_url,
+					'permalink'   => 'https://bsky.app/profile/' . $handle . '/post/' . self::extract_rkey( $post['uri'] ?? '' ),
+					'caption'     => $caption,
+					'username'    => '@' . ( $author['handle'] ?? $handle ),
+					'timestamp'   => $record['createdAt'] ?? '',
+					'profile_url' => 'https://bsky.app/profile/' . $handle,
+				)
+			);
 
 			$posts[] = $normalized;
 		}
@@ -83,7 +85,7 @@ class Social_Feed_Bluesky_Provider extends Social_Feed_Provider {
 	}
 
 	public static function get_auth_url( string $state ): string {
-		$creds = get_option( 'social_feed_creds_bluesky', array() );
+		$creds     = get_option( 'social_feed_creds_bluesky', array() );
 		$client_id = $creds['client_id'] ?? '';
 
 		$redirect_uri = rest_url( 'social-feed/v1/oauth/bluesky/callback' );
@@ -103,15 +105,18 @@ class Social_Feed_Bluesky_Provider extends Social_Feed_Provider {
 	public static function exchange_code( string $code ) {
 		$creds = get_option( 'social_feed_creds_bluesky', array() );
 
-		$response = wp_remote_post( 'https://bsky.app/xrpc/com.atproto.server.createAccessToken', array(
-			'body' => array(
-				'client_id'  => $creds['client_id'] ?? '',
-				'client_secret' => $creds['client_secret'] ?? '',
-				'grant_type' => 'authorization_code',
-				'code'       => $code,
-				'redirect_uri' => rest_url( 'social-feed/v1/oauth/bluesky/callback' ),
-			),
-		) );
+		$response = wp_remote_post(
+			'https://bsky.app/xrpc/com.atproto.server.createAccessToken',
+			array(
+				'body' => array(
+					'client_id'     => $creds['client_id'] ?? '',
+					'client_secret' => $creds['client_secret'] ?? '',
+					'grant_type'    => 'authorization_code',
+					'code'          => $code,
+					'redirect_uri'  => rest_url( 'social-feed/v1/oauth/bluesky/callback' ),
+				),
+			)
+		);
 
 		if ( is_wp_error( $response ) ) {
 			return $response;
@@ -139,9 +144,12 @@ class Social_Feed_Bluesky_Provider extends Social_Feed_Provider {
 			'Authorization' => 'Bearer ' . $token,
 		);
 
-		$response = wp_remote_get( 'https://public.api.bsky.app/xrpc/com.atproto.identity.resolveHandle', array(
-			'headers' => $headers,
-		) );
+		$response = wp_remote_get(
+			'https://public.api.bsky.app/xrpc/com.atproto.identity.resolveHandle',
+			array(
+				'headers' => $headers,
+			)
+		);
 
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 		return $body['handle'] ?? '';
@@ -150,7 +158,7 @@ class Social_Feed_Bluesky_Provider extends Social_Feed_Provider {
 	public function get_embed_html( string $url ): string {
 		// Bluesky does not have official oEmbed - render simple card
 		$handle = str_replace( 'https://bsky.app/profile/', '', $url );
-		$rkey = self::extract_rkey( $url );
+		$rkey   = self::extract_rkey( $url );
 
 		return '<div class="bluesky-embed" data-handle="' . esc_attr( $handle ) . '" data-rkey="' . esc_attr( $rkey ) . '"></div>';
 	}
@@ -158,5 +166,4 @@ class Social_Feed_Bluesky_Provider extends Social_Feed_Provider {
 	protected function get_api_endpoint( string $endpoint ): string {
 		return 'https://public.api.bsky.app/xrpc/' . $endpoint;
 	}
-
 }

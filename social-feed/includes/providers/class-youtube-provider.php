@@ -28,7 +28,7 @@ class Social_Feed_YouTube_Provider extends Social_Feed_Provider {
 			return array();
 		}
 
-		$posts = array();
+		$posts            = array();
 		$uploads_playlist = self::get_uploads_playlist( $channel_id );
 
 		if ( empty( $uploads_playlist ) ) {
@@ -52,19 +52,21 @@ class Social_Feed_YouTube_Provider extends Social_Feed_Provider {
 		}
 
 		foreach ( $data['items'] as $item ) {
-			$snippet = $item['snippet'] ?? array();
+			$snippet  = $item['snippet'] ?? array();
 			$video_id = $snippet['resourceId']['videoId'] ?? '';
 
-			$normalized = $this->normalize_post( array(
-				'id'          => $video_id,
-				'type'        => 'video',
-				'media_url'   => $snippet['thumbnails']['high']['url'] ?? '',
-				'permalink'   => 'https://youtube.com/watch?v=' . $video_id,
-				'caption'     => $snippet['title'] ?? '',
-				'username'    => $snippet['channelTitle'] ?? '',
-				'timestamp'   => $snippet['publishedAt'] ?? '',
-				'profile_url' => 'https://youtube.com/channel/' . $channel_id,
-			) );
+			$normalized = $this->normalize_post(
+				array(
+					'id'          => $video_id,
+					'type'        => 'video',
+					'media_url'   => $snippet['thumbnails']['high']['url'] ?? '',
+					'permalink'   => 'https://youtube.com/watch?v=' . $video_id,
+					'caption'     => $snippet['title'] ?? '',
+					'username'    => $snippet['channelTitle'] ?? '',
+					'timestamp'   => $snippet['publishedAt'] ?? '',
+					'profile_url' => 'https://youtube.com/channel/' . $channel_id,
+				)
+			);
 
 			$posts[] = $normalized;
 		}
@@ -78,7 +80,7 @@ class Social_Feed_YouTube_Provider extends Social_Feed_Provider {
 	}
 
 	public static function get_auth_url( string $state ): string {
-		$creds = get_option( 'social_feed_creds_youtube', array() );
+		$creds     = get_option( 'social_feed_creds_youtube', array() );
 		$client_id = $creds['client_id'] ?? '';
 
 		$redirect_uri = rest_url( 'social-feed/v1/oauth/youtube/callback' );
@@ -99,18 +101,21 @@ class Social_Feed_YouTube_Provider extends Social_Feed_Provider {
 	public static function exchange_code( string $code ) {
 		$creds = get_option( 'social_feed_creds_youtube', array() );
 
-		$response = wp_remote_post( 'https://oauth2.googleapis.com/token', array(
-			'headers' => array(
-				'Content-Type' => 'application/x-www-form-urlencoded',
-			),
-			'body' => array(
-				'client_id'     => $creds['client_id'] ?? '',
-				'client_secret' => $creds['client_secret'] ?? '',
-				'grant_type'    => 'authorization_code',
-				'code'          => $code,
-				'redirect_uri'  => rest_url( 'social-feed/v1/oauth/youtube/callback' ),
-			),
-		) );
+		$response = wp_remote_post(
+			'https://oauth2.googleapis.com/token',
+			array(
+				'headers' => array(
+					'Content-Type' => 'application/x-www-form-urlencoded',
+				),
+				'body'    => array(
+					'client_id'     => $creds['client_id'] ?? '',
+					'client_secret' => $creds['client_secret'] ?? '',
+					'grant_type'    => 'authorization_code',
+					'code'          => $code,
+					'redirect_uri'  => rest_url( 'social-feed/v1/oauth/youtube/callback' ),
+				),
+			)
+		);
 
 		if ( is_wp_error( $response ) ) {
 			return $response;
@@ -138,11 +143,17 @@ class Social_Feed_YouTube_Provider extends Social_Feed_Provider {
 			'Authorization' => 'Bearer ' . $token,
 		);
 
-		$response = wp_remote_get( add_query_arg( array(
-			'part' => 'id',
-		), 'https://www.googleapis.com/youtube/v3/channels?mine=true' ), array(
-			'headers' => $headers,
-		) );
+		$response = wp_remote_get(
+			add_query_arg(
+				array(
+					'part' => 'id',
+				),
+				'https://www.googleapis.com/youtube/v3/channels?mine=true'
+			),
+			array(
+				'headers' => $headers,
+			)
+		);
 
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 		return $body['items'][0]['id'] ?? '';
@@ -165,5 +176,4 @@ class Social_Feed_YouTube_Provider extends Social_Feed_Provider {
 	protected function get_api_endpoint( string $endpoint ): string {
 		return 'https://www.googleapis.com/youtube/v3/' . $endpoint;
 	}
-
 }

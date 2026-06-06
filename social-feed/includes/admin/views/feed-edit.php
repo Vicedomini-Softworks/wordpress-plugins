@@ -8,15 +8,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // $feed may be null (new) or array (edit)
-$is_edit    = ! empty( $feed );
-$slug       = $feed['slug'] ?? '';
-$platform   = $feed['platform'] ?? 'instagram';
-$mode       = $feed['mode'] ?? 'embed';
-$account    = $feed['account'] ?? '';
-$cache_h    = $feed['cache_hours'] ?? 8;
-$display    = $feed['display'] ?? array();
+$is_edit  = ! empty( $feed );
+$slug     = $feed['slug'] ?? '';
+$platform = $feed['platform'] ?? 'instagram';
+$feed_mode = $feed['mode'] ?? 'embed';
+$account  = $feed['account'] ?? '';
+$cache_h  = $feed['cache_hours'] ?? 8;
+$display  = $feed['display'] ?? array();
 
-$platforms  = array(
+$platforms = array(
 	'instagram' => 'Instagram',
 	'facebook'  => 'Facebook',
 	'tiktok'    => 'TikTok',
@@ -26,14 +26,14 @@ $platforms  = array(
 	'youtube'   => 'YouTube',
 );
 
-$layouts    = array(
+$layouts = array(
 	'grid'     => __( 'Grid', 'social-feed' ),
 	'masonry'  => __( 'Masonry', 'social-feed' ),
 	'carousel' => __( 'Carousel', 'social-feed' ),
 	'column'   => __( 'Column', 'social-feed' ),
 );
 
-$themes     = array(
+$themes = array(
 	'light' => __( 'Light', 'social-feed' ),
 	'dark'  => __( 'Dark', 'social-feed' ),
 );
@@ -73,7 +73,7 @@ $themes     = array(
 				</th>
 				<td>
 					<select id="platform" name="platform">
-						<?php foreach ( $platforms as $value => $label ): ?>
+						<?php foreach ( $platforms as $value => $label ) : ?>
 							<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $platform, $value ); ?>>
 								<?php echo esc_html( $label ); ?>
 							</option>
@@ -88,8 +88,8 @@ $themes     = array(
 				</th>
 				<td>
 					<select id="mode" name="mode">
-						<option value="embed" <?php selected( $mode, 'embed' ); ?>><?php esc_html_e( 'Embed (default)', 'social-feed' ); ?></option>
-						<option value="oauth" <?php selected( $mode, 'oauth' ); ?>><?php esc_html_e( 'OAuth (API)', 'social-feed' ); ?></option>
+						<option value="embed" <?php selected( $feed_mode, 'embed' ); ?>><?php esc_html_e( 'Embed (default)', 'social-feed' ); ?></option>
+						<option value="oauth" <?php selected( $feed_mode, 'oauth' ); ?>><?php esc_html_e( 'OAuth (API)', 'social-feed' ); ?></option>
 					</select>
 					<p class="description" id="mode-embed-desc"><?php esc_html_e( 'Embed: paste a post or profile URL below. No API required.', 'social-feed' ); ?></p>
 					<p class="description" id="mode-oauth-desc" style="display:none;"><?php esc_html_e( 'OAuth: connect account via Platform Settings. Fetches a feed of posts.', 'social-feed' ); ?></p>
@@ -123,7 +123,7 @@ $themes     = array(
 				</th>
 				<td>
 					<select id="display_type" name="display_type">
-						<?php foreach ( $layouts as $value => $label ): ?>
+						<?php foreach ( $layouts as $value => $label ) : ?>
 							<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $display['type'] ?? 'grid', $value ); ?>>
 								<?php echo esc_html( $label ); ?>
 							</option>
@@ -138,7 +138,7 @@ $themes     = array(
 				</th>
 				<td>
 					<select id="display_theme" name="display_theme">
-						<?php foreach ( $themes as $value => $label ): ?>
+						<?php foreach ( $themes as $value => $label ) : ?>
 							<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $display['theme'] ?? 'light', $value ); ?>>
 								<?php echo esc_html( $label ); ?>
 							</option>

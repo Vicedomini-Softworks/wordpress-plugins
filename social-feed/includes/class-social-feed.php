@@ -69,10 +69,10 @@ class Social_Feed {
 			add_action( 'admin_menu', array( 'Social_Feed_Admin', 'register_menu' ) );
 
 			// Handle form submissions via admin-post
-			add_action( 'admin_post_social_feed_save_feed',      array( 'Social_Feed_Admin', 'handle_submission' ) );
-			add_action( 'admin_post_social_feed_delete_feed',    array( 'Social_Feed_Admin', 'handle_submission' ) );
-			add_action( 'admin_post_social_feed_save_platform',  array( __CLASS__, 'handle_platform_save' ) );
-			add_action( 'admin_post_social_feed_reset_cache',    array( 'Social_Feed_Admin', 'handle_submission' ) );
+			add_action( 'admin_post_social_feed_save_feed', array( 'Social_Feed_Admin', 'handle_submission' ) );
+			add_action( 'admin_post_social_feed_delete_feed', array( 'Social_Feed_Admin', 'handle_submission' ) );
+			add_action( 'admin_post_social_feed_save_platform', array( __CLASS__, 'handle_platform_save' ) );
+			add_action( 'admin_post_social_feed_reset_cache', array( 'Social_Feed_Admin', 'handle_submission' ) );
 
 			// Admin styles
 			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_assets' ) );
@@ -100,7 +100,10 @@ class Social_Feed {
 			VS_Secrets_Manager_Secret_Manager::set(
 				'social_feed_' . $platform . '_client_id',
 				sanitize_text_field( wp_unslash( $_POST['client_id'] ) ),
-				array( 'title' => 'Social Feed ' . $platform . ' client_id', 'provider' => 'db' )
+				array(
+					'title'    => 'Social Feed ' . $platform . ' client_id',
+					'provider' => 'db',
+				)
 			);
 		}
 
@@ -108,7 +111,10 @@ class Social_Feed {
 			VS_Secrets_Manager_Secret_Manager::set(
 				'social_feed_' . $platform . '_client_secret',
 				sanitize_text_field( wp_unslash( $_POST['client_secret'] ) ),
-				array( 'title' => 'Social Feed ' . $platform . ' client_secret', 'provider' => 'db' )
+				array(
+					'title'    => 'Social Feed ' . $platform . ' client_secret',
+					'provider' => 'db',
+				)
 			);
 		}
 
@@ -117,10 +123,10 @@ class Social_Feed {
 		$current     = get_option( $option_name, array() );
 
 		$meta = array(
-			'token_expiry'  => $current['token_expiry'] ?? 0,
-			'connected_at'  => $current['connected_at'] ?? 0,
-			'account_id'    => $current['account_id'] ?? '',
-			'cache_reset_at'=> $current['cache_reset_at'] ?? 0,
+			'token_expiry'   => $current['token_expiry'] ?? 0,
+			'connected_at'   => $current['connected_at'] ?? 0,
+			'account_id'     => $current['account_id'] ?? '',
+			'cache_reset_at' => $current['cache_reset_at'] ?? 0,
 		);
 
 		update_option( $option_name, $meta, false );
@@ -152,5 +158,4 @@ class Social_Feed {
 			SOCIAL_FEED_VERSION
 		);
 	}
-
 }

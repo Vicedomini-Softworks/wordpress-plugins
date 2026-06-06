@@ -3,19 +3,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$edit_id  = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0;
-$is_edit  = $edit_id > 0;
-$secret   = null;
-$name     = '';
-$title    = '';
-$provider = 'db';
+$edit_id       = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+$is_edit       = $edit_id > 0;
+$secret        = null;
+$vsm_name      = '';
+$vsm_title     = '';
+$vsm_provider  = 'db';
 
 if ( $is_edit ) {
 	$secret = VS_Secrets_Manager_Secret_Manager::get_record_by_id( $edit_id );
 	if ( $secret ) {
-		$name     = $secret->name;
-		$title    = $secret->title;
-		$provider = $secret->provider;
+		$vsm_name     = $secret->name;
+		$vsm_title    = $secret->title;
+		$vsm_provider = $secret->provider;
 	}
 }
 ?>
@@ -33,7 +33,7 @@ if ( $is_edit ) {
 					</th>
 					<td>
 						<input type="text" id="vs-secret-name" name="name" class="regular-text"
-							value="<?php echo esc_attr( $name ); ?>" <?php echo $is_edit ? 'readonly' : 'required'; ?>>
+							value="<?php echo esc_attr( $vsm_name ); ?>" <?php echo $is_edit ? 'readonly' : 'required'; ?>>
 						<p class="description"><?php echo esc_html__( 'Unique identifier used to retrieve the secret via code.', 'vs-secrets-manager' ); ?></p>
 					</td>
 				</tr>
@@ -43,7 +43,7 @@ if ( $is_edit ) {
 					</th>
 					<td>
 						<input type="text" id="vs-secret-title" name="title" class="regular-text"
-							value="<?php echo esc_attr( $title ); ?>">
+							value="<?php echo esc_attr( $vsm_title ); ?>">
 						<p class="description"><?php echo esc_html__( 'Human-readable description.', 'vs-secrets-manager' ); ?></p>
 					</td>
 				</tr>
@@ -53,9 +53,9 @@ if ( $is_edit ) {
 					</th>
 					<td>
 						<select id="vs-secret-provider" name="provider" <?php echo $is_edit ? 'disabled' : ''; ?>>
-							<option value="db" <?php selected( $provider, 'db' ); ?>><?php echo esc_html__( 'Database (Encrypted)', 'vs-secrets-manager' ); ?></option>
-							<option value="aws" <?php selected( $provider, 'aws' ); ?>><?php echo esc_html__( 'AWS Secrets Manager', 'vs-secrets-manager' ); ?></option>
-							<option value="vault" <?php selected( $provider, 'vault' ); ?>><?php echo esc_html__( 'Hashicorp Vault / OpenBao', 'vs-secrets-manager' ); ?></option>
+							<option value="db" <?php selected( $vsm_provider, 'db' ); ?>><?php echo esc_html__( 'Database (Encrypted)', 'vs-secrets-manager' ); ?></option>
+							<option value="aws" <?php selected( $vsm_provider, 'aws' ); ?>><?php echo esc_html__( 'AWS Secrets Manager', 'vs-secrets-manager' ); ?></option>
+							<option value="vault" <?php selected( $vsm_provider, 'vault' ); ?>><?php echo esc_html__( 'Hashicorp Vault / OpenBao', 'vs-secrets-manager' ); ?></option>
 						</select>
 					</td>
 				</tr>

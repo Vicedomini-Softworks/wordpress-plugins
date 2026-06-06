@@ -9,10 +9,12 @@ class VS_Secrets_Manager_DB_Provider extends VS_Secrets_Manager_Provider {
 	public function get( string $name ): ?string {
 		global $wpdb;
 
-		$row = $wpdb->get_row( $wpdb->prepare(
-			"SELECT value FROM {$wpdb->prefix}vsecrets_secrets WHERE name = %s AND provider = 'db'",
-			$name
-		) );
+		$row = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT value FROM {$wpdb->prefix}vsecrets_secrets WHERE name = %s AND provider = 'db'",
+				$name
+			)
+		);
 
 		if ( ! $row || null === $row->value ) {
 			return null;
@@ -34,10 +36,12 @@ class VS_Secrets_Manager_DB_Provider extends VS_Secrets_Manager_Provider {
 		$title     = $meta['title'] ?? '';
 		$now       = current_time( 'mysql', true );
 
-		$existing = $wpdb->get_var( $wpdb->prepare(
-			"SELECT id FROM {$wpdb->prefix}vsecrets_secrets WHERE name = %s",
-			$name
-		) );
+		$existing = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT id FROM {$wpdb->prefix}vsecrets_secrets WHERE name = %s",
+				$name
+			)
+		);
 
 		if ( $existing ) {
 			return (bool) $wpdb->update(
@@ -75,7 +79,10 @@ class VS_Secrets_Manager_DB_Provider extends VS_Secrets_Manager_Provider {
 
 		return (bool) $wpdb->delete(
 			$wpdb->prefix . 'vsecrets_secrets',
-			array( 'name' => $name, 'provider' => 'db' )
+			array(
+				'name'     => $name,
+				'provider' => 'db',
+			)
 		);
 	}
 

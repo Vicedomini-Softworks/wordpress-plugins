@@ -125,8 +125,8 @@ class VS_Mailer_Mailgun_Provider extends VS_Mailer_Mail_Provider {
 			);
 		}
 
-		$region  = get_option( 'vs_mailer_mailgun_region', 'us' );
-		$url     = 'eu' === $region
+		$region = get_option( 'vs_mailer_mailgun_region', 'us' );
+		$url    = 'eu' === $region
 			? 'https://api.eu.mailgun.net/v3/domains'
 			: 'https://api.mailgun.net/v3/domains';
 
@@ -159,6 +159,7 @@ class VS_Mailer_Mailgun_Provider extends VS_Mailer_Mail_Provider {
 		return array(
 			'success' => false,
 			'message' => sprintf(
+				/* translators: %d: HTTP status code */
 				__( 'Mailgun API error (HTTP %d).', 'vs-mailer' ),
 				$status
 			),

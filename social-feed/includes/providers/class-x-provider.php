@@ -31,8 +31,8 @@ class Social_Feed_X_Provider extends Social_Feed_Provider {
 		$posts = array();
 		$url   = add_query_arg(
 			array(
-				'max_results' => min( $limit, 100 ),
-				'expansions'  => 'author_id',
+				'max_results'  => min( $limit, 100 ),
+				'expansions'   => 'author_id',
 				'tweet.fields' => 'created_at,public_metrics,entities',
 			),
 			'https://api.x.com/2/users/' . $user_id . '/tweets'
@@ -48,7 +48,7 @@ class Social_Feed_X_Provider extends Social_Feed_Provider {
 			return array();
 		}
 
-		$users = isset( $data['includes']['users'][0] ) ? $data['includes']['users'][0] : null;
+		$users    = isset( $data['includes']['users'][0] ) ? $data['includes']['users'][0] : null;
 		$username = $users['username'] ?? '';
 
 		foreach ( $data['data'] as $raw_post ) {
@@ -57,16 +57,18 @@ class Social_Feed_X_Provider extends Social_Feed_Provider {
 				$media_url = $raw_post['entities']['media'][0]['url'] ?? '';
 			}
 
-			$normalized = $this->normalize_post( array(
-				'id'          => $raw_post['id'] ?? '',
-				'type'        => empty( $media_url ) ? 'text' : 'image',
-				'media_url'   => $media_url,
-				'permalink'   => 'https://x.com/' . $username . '/status/' . $raw_post['id'],
-				'caption'     => $raw_post['text'] ?? '',
-				'username'    => '@' . $username,
-				'timestamp'   => $raw_post['created_at'] ?? '',
-				'profile_url' => 'https://x.com/' . $username,
-			) );
+			$normalized = $this->normalize_post(
+				array(
+					'id'          => $raw_post['id'] ?? '',
+					'type'        => empty( $media_url ) ? 'text' : 'image',
+					'media_url'   => $media_url,
+					'permalink'   => 'https://x.com/' . $username . '/status/' . $raw_post['id'],
+					'caption'     => $raw_post['text'] ?? '',
+					'username'    => '@' . $username,
+					'timestamp'   => $raw_post['created_at'] ?? '',
+					'profile_url' => 'https://x.com/' . $username,
+				)
+			);
 
 			$posts[] = $normalized;
 		}
@@ -75,7 +77,7 @@ class Social_Feed_X_Provider extends Social_Feed_Provider {
 	}
 
 	public static function get_auth_url( string $state ): string {
-		$creds = get_option( 'social_feed_creds_x', array() );
+		$creds     = get_option( 'social_feed_creds_x', array() );
 		$client_id = $creds['client_id'] ?? '';
 
 		$redirect_uri = rest_url( 'social-feed/v1/oauth/x/callback' );
@@ -97,20 +99,23 @@ class Social_Feed_X_Provider extends Social_Feed_Provider {
 
 		$redirect_uri = rest_url( 'social-feed/v1/oauth/x/callback' );
 
-		$response = wp_remote_post( 'https://api.x.com/2/oauth2/token', array(
-			'headers' => array(
-				'Authorization' => 'Basic ' . base64_encode(
-					$creds['client_id'] . ':' . $creds['client_secret']
+		$response = wp_remote_post(
+			'https://api.x.com/2/oauth2/token',
+			array(
+				'headers' => array(
+					'Authorization' => 'Basic ' . base64_encode(
+						$creds['client_id'] . ':' . $creds['client_secret']
+					),
+					'Content-Type'  => 'application/x-www-form-urlencoded',
 				),
-				'Content-Type'  => 'application/x-www-form-urlencoded',
-			),
-			'body' => array(
-				'code'          => $code,
-				'grant_type'    => 'authorization_code',
-				'code_verifier' => 'verifier',
-				'redirect_uri'  => $redirect_uri,
-			),
-		) );
+				'body'    => array(
+					'code'          => $code,
+					'grant_type'    => 'authorization_code',
+					'code_verifier' => 'verifier',
+					'redirect_uri'  => $redirect_uri,
+				),
+			)
+		);
 
 		if ( is_wp_error( $response ) ) {
 			return $response;
@@ -137,19 +142,27 @@ class Social_Feed_X_Provider extends Social_Feed_Provider {
 			'Authorization' => 'Bearer ' . $token,
 		);
 
-		$response = wp_remote_get( 'https://api.x.com/2/users/me', array(
-			'headers' => $headers,
-		) );
+		$response = wp_remote_get(
+			'https://api.x.com/2/users/me',
+			array(
+				'headers' => $headers,
+			)
+		);
 
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 		return $body['data'] ?? array();
 	}
 
 	public function get_embed_html( string $url ): string {
-		$response = wp_remote_get( add_query_arg( array(
-			'url'      => $url,
-			'format'   => 'json',
-		), 'https://publish.twitter.com/oembed' ) );
+		$response = wp_remote_get(
+			add_query_arg(
+				array(
+					'url'    => $url,
+					'format' => 'json',
+				),
+				'https://publish.twitter.com/oembed'
+			)
+		);
 
 		if ( is_wp_error( $response ) ) {
 			return '';
@@ -162,5 +175,4 @@ class Social_Feed_X_Provider extends Social_Feed_Provider {
 	protected function get_api_endpoint( string $endpoint ): string {
 		return 'https://api.x.com/2/' . $endpoint;
 	}
-
 }

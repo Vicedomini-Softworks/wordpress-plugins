@@ -7,6 +7,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 global $wpdb;
 
 $table_name = $wpdb->prefix . 'vsecrets_secrets';
+// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name derived from $wpdb->prefix, not user input
 $wpdb->query( "DROP TABLE IF EXISTS {$table_name}" );
 
 delete_option( 'vs_secrets_manager_db_version' );

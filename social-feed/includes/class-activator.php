@@ -37,7 +37,7 @@ class Social_Feed_Activator {
 	RewriteEngine On
 	RewriteRule ^ - [F]
 </IfModule>';
-		$htaccess_path = $cache_dir . '.htaccess';
+		$htaccess_path    = $cache_dir . '.htaccess';
 		if ( ! file_exists( $htaccess_path ) ) {
 			file_put_contents( $htaccess_path, $htaccess_content );
 		}
@@ -46,5 +46,4 @@ class Social_Feed_Activator {
 	private static function register_roles() {
 		// No custom roles needed - uses existing admin capabilities
 	}
-
 }

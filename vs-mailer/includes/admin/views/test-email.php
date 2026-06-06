@@ -3,8 +3,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// phpcs:disable WordPress.Security.NonceVerification.Recommended
 $result  = isset( $_GET['result'] ) ? sanitize_key( $_GET['result'] ) : '';
 $message = isset( $_GET['message'] ) ? sanitize_text_field( wp_unslash( $_GET['message'] ) ) : '';
+// phpcs:enable WordPress.Security.NonceVerification.Recommended
 ?>
 
 <h2><?php esc_html_e( 'Send a Test Email', 'vs-mailer' ); ?></h2>

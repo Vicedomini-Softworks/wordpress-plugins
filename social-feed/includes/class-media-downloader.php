@@ -135,5 +135,4 @@ class Social_Feed_Media_Downloader {
 
 		return self::download( $url, $platform, $feed_slug );
 	}
-
 }

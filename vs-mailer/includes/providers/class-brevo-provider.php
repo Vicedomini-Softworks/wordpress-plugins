@@ -21,13 +21,13 @@ class VS_Mailer_Brevo_Provider extends VS_Mailer_Mail_Provider {
 		$to_addresses   = self::normalize_to_array( $to );
 
 		$payload = array(
-			'sender'    => array(
+			'sender'  => array(
 				'name'  => $from['name'],
 				'email' => $from['email'],
 			),
-			'to'        => array(),
-			'subject'   => $subject,
-			'headers'   => array(
+			'to'      => array(),
+			'subject' => $subject,
+			'headers' => array(
 				'X-Mailer' => 'VS-Mailer',
 			),
 		);
@@ -37,7 +37,7 @@ class VS_Mailer_Brevo_Provider extends VS_Mailer_Mail_Provider {
 		}
 
 		if ( isset( $parsed_headers['cc'] ) ) {
-			$cc_addresses = explode( ',', $parsed_headers['cc'] );
+			$cc_addresses  = explode( ',', $parsed_headers['cc'] );
 			$payload['cc'] = array();
 			foreach ( $cc_addresses as $address ) {
 				$payload['cc'][] = array( 'email' => trim( $address ) );
@@ -45,7 +45,7 @@ class VS_Mailer_Brevo_Provider extends VS_Mailer_Mail_Provider {
 		}
 
 		if ( isset( $parsed_headers['bcc'] ) ) {
-			$bcc_addresses = explode( ',', $parsed_headers['bcc'] );
+			$bcc_addresses  = explode( ',', $parsed_headers['bcc'] );
 			$payload['bcc'] = array();
 			foreach ( $bcc_addresses as $address ) {
 				$payload['bcc'][] = array( 'email' => trim( $address ) );
@@ -132,6 +132,7 @@ class VS_Mailer_Brevo_Provider extends VS_Mailer_Mail_Provider {
 			return array(
 				'success' => true,
 				'message' => sprintf(
+					/* translators: %s: Brevo account email */
 					__( 'Connected as %s.', 'vs-mailer' ),
 					$name
 				),
@@ -141,6 +142,7 @@ class VS_Mailer_Brevo_Provider extends VS_Mailer_Mail_Provider {
 		return array(
 			'success' => false,
 			'message' => sprintf(
+				/* translators: %d: HTTP status code */
 				__( 'Brevo API error (HTTP %d).', 'vs-mailer' ),
 				$status
 			),

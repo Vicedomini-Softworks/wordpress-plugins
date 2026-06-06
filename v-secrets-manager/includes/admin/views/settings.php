@@ -3,14 +3,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$aws_loaded       = class_exists( 'Aws\SecretsManager\SecretsManagerClient' );
-$aws_access_key   = get_option( 'vs_secrets_manager_aws_access_key', '' );
-$aws_region       = get_option( 'vs_secrets_manager_aws_region', 'us-east-1' );
-$vault_address    = get_option( 'vs_secrets_manager_vault_address', '' );
-$vault_mount      = get_option( 'vs_secrets_manager_vault_mount', 'secret' );
-$vault_namespace  = get_option( 'vs_secrets_manager_vault_namespace', '' );
+$aws_loaded      = class_exists( 'Aws\SecretsManager\SecretsManagerClient' );
+$aws_access_key  = get_option( 'vs_secrets_manager_aws_access_key', '' );
+$aws_region      = get_option( 'vs_secrets_manager_aws_region', 'us-east-1' );
+$vault_address   = get_option( 'vs_secrets_manager_vault_address', '' );
+$vault_mount     = get_option( 'vs_secrets_manager_vault_mount', 'secret' );
+$vault_namespace = get_option( 'vs_secrets_manager_vault_namespace', '' );
 
-$updated = isset( $_GET['updated'] ) && '1' === $_GET['updated'];
+$updated = isset( $_GET['updated'] ) && '1' === $_GET['updated']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 ?>
 <div class="wrap">
 	<h1><?php echo esc_html__( 'VSecrets Manager Settings', 'vs-secrets-manager' ); ?></h1>

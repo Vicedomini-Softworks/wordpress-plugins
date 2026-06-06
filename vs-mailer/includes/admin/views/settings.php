@@ -5,26 +5,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $current_mailer = get_option( 'vs_mailer_mailer', 'smtp' );
 
-$smtp_host        = get_option( 'vs_mailer_smtp_host', '' );
-$smtp_port        = get_option( 'vs_mailer_smtp_port', 587 );
-$smtp_encryption  = get_option( 'vs_mailer_smtp_encryption', 'tls' );
-$smtp_auth        = get_option( 'vs_mailer_smtp_auth', 'yes' );
-$smtp_username    = get_option( 'vs_mailer_smtp_username', '' );
-$smtp_password    = VS_Mailer_Admin::get_masked_value( 'vs_mailer_smtp_password' );
+$smtp_host       = get_option( 'vs_mailer_smtp_host', '' );
+$smtp_port       = get_option( 'vs_mailer_smtp_port', 587 );
+$smtp_encryption = get_option( 'vs_mailer_smtp_encryption', 'tls' );
+$smtp_auth       = get_option( 'vs_mailer_smtp_auth', 'yes' );
+$smtp_username   = get_option( 'vs_mailer_smtp_username', '' );
+$smtp_password   = VS_Mailer_Admin::get_masked_value( 'vs_mailer_smtp_password' );
 
-$brevo_api_key    = VS_Mailer_Admin::get_masked_value( 'vs_mailer_brevo_api_key' );
-$brevo_domain     = get_option( 'vs_mailer_brevo_domain', '' );
+$brevo_api_key = VS_Mailer_Admin::get_masked_value( 'vs_mailer_brevo_api_key' );
+$brevo_domain  = get_option( 'vs_mailer_brevo_domain', '' );
 
-$mailgun_api_key  = VS_Mailer_Admin::get_masked_value( 'vs_mailer_mailgun_api_key' );
-$mailgun_domain   = get_option( 'vs_mailer_mailgun_domain', '' );
-$mailgun_region   = get_option( 'vs_mailer_mailgun_region', 'us' );
+$mailgun_api_key = VS_Mailer_Admin::get_masked_value( 'vs_mailer_mailgun_api_key' );
+$mailgun_domain  = get_option( 'vs_mailer_mailgun_domain', '' );
+$mailgun_region  = get_option( 'vs_mailer_mailgun_region', 'us' );
 
 $log_emails = get_option( 'vs_mailer_log_emails', 'no' );
 $from_name  = get_option( 'vs_mailer_from_name', get_bloginfo( 'name' ) );
 $from_email = get_option( 'vs_mailer_from_email', get_bloginfo( 'admin_email' ) );
 ?>
 
-<?php if ( isset( $_GET['saved'] ) ) : ?>
+<?php if ( isset( $_GET['saved'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
 	<div class="notice notice-success">
 		<p><?php esc_html_e( 'Settings saved.', 'vs-mailer' ); ?></p>
 	</div>

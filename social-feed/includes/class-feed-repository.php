@@ -135,5 +135,4 @@ class Social_Feed_Feed_Repository {
 
 		return $errors;
 	}
-
 }

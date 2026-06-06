@@ -89,7 +89,7 @@ class VS_Mailer_Admin {
 		}
 
 		if ( isset( $_POST['vs_mailer_smtp_encryption'] ) ) {
-			$enc = sanitize_key( $_POST['vs_mailer_smtp_encryption'] );
+			$enc         = sanitize_key( $_POST['vs_mailer_smtp_encryption'] );
 			$allowed_enc = array( 'ssl', 'tls', 'none' );
 			update_option(
 				'vs_mailer_smtp_encryption',
@@ -116,7 +116,10 @@ class VS_Mailer_Admin {
 			VS_Secrets_Manager_Secret_Manager::set(
 				'vs_mailer_smtp_password',
 				sanitize_text_field( wp_unslash( $_POST['vs_mailer_smtp_password'] ) ),
-				array( 'title' => 'VS Mailer SMTP Password', 'provider' => 'db' )
+				array(
+					'title'    => 'VS Mailer SMTP Password',
+					'provider' => 'db',
+				)
 			);
 		}
 
@@ -124,7 +127,10 @@ class VS_Mailer_Admin {
 			VS_Secrets_Manager_Secret_Manager::set(
 				'vs_mailer_brevo_api_key',
 				sanitize_text_field( wp_unslash( $_POST['vs_mailer_brevo_api_key'] ) ),
-				array( 'title' => 'VS Mailer Brevo API Key', 'provider' => 'db' )
+				array(
+					'title'    => 'VS Mailer Brevo API Key',
+					'provider' => 'db',
+				)
 			);
 		}
 
@@ -132,14 +138,17 @@ class VS_Mailer_Admin {
 			VS_Secrets_Manager_Secret_Manager::set(
 				'vs_mailer_mailgun_api_key',
 				sanitize_text_field( wp_unslash( $_POST['vs_mailer_mailgun_api_key'] ) ),
-				array( 'title' => 'VS Mailer Mailgun API Key', 'provider' => 'db' )
+				array(
+					'title'    => 'VS Mailer Mailgun API Key',
+					'provider' => 'db',
+				)
 			);
 		}
 
 		$redirect = add_query_arg(
 			array(
-				'page'    => 'vs-mailer',
-				'saved'   => '1',
+				'page'  => 'vs-mailer',
+				'saved' => '1',
 			),
 			admin_url( 'options-general.php' )
 		);
@@ -162,10 +171,10 @@ class VS_Mailer_Admin {
 		if ( empty( $to_email ) ) {
 			$redirect = add_query_arg(
 				array(
-					'page'     => 'vs-mailer',
-					'tab'      => 'test',
-					'result'   => '0',
-					'message'  => urlencode( __( 'Please enter a valid email address.', 'vs-mailer' ) ),
+					'page'    => 'vs-mailer',
+					'tab'     => 'test',
+					'result'  => '0',
+					'message' => rawurlencode( __( 'Please enter a valid email address.', 'vs-mailer' ) ),
 				),
 				admin_url( 'options-general.php' )
 			);
@@ -173,9 +182,10 @@ class VS_Mailer_Admin {
 			exit;
 		}
 
-		$subject = __( 'VS Mailer Test Email', 'vs-mailer' );
-		$message = '<h2>' . __( 'VS Mailer Test', 'vs-mailer' ) . '</h2>';
+		$subject  = __( 'VS Mailer Test Email', 'vs-mailer' );
+		$message  = '<h2>' . __( 'VS Mailer Test', 'vs-mailer' ) . '</h2>';
 		$message .= '<p>' . sprintf(
+			/* translators: %s: date/time string */
 			__( 'This is a test email sent at %s.', 'vs-mailer' ),
 			current_time( 'mysql' )
 		) . '</p>';
@@ -183,14 +193,17 @@ class VS_Mailer_Admin {
 
 		$result = wp_mail( $to_email, $subject, $message, array( 'Content-Type: text/html' ) );
 
+		/* translators: %s: recipient email address */
+		$result_msg = $result
+			? rawurlencode( sprintf( __( 'Test email sent to %s.', 'vs-mailer' ), $to_email ) )
+			: rawurlencode( __( 'Failed to send test email.', 'vs-mailer' ) );
+
 		$redirect = add_query_arg(
 			array(
-				'page'     => 'vs-mailer',
-				'tab'      => 'test',
-				'result'   => $result ? '1' : '0',
-				'message'  => $result
-					? urlencode( sprintf( __( 'Test email sent to %s.', 'vs-mailer' ), $to_email ) )
-					: urlencode( __( 'Failed to send test email.', 'vs-mailer' ) ),
+				'page'    => 'vs-mailer',
+				'tab'     => 'test',
+				'result'  => $result ? '1' : '0',
+				'message' => $result_msg,
 			),
 			admin_url( 'options-general.php' )
 		);
@@ -210,9 +223,9 @@ class VS_Mailer_Admin {
 
 		$redirect = add_query_arg(
 			array(
-				'page'      => 'vs-mailer',
-				'tab'       => 'log',
-				'cleared'   => '1',
+				'page'    => 'vs-mailer',
+				'tab'     => 'log',
+				'cleared' => '1',
 			),
 			admin_url( 'options-general.php' )
 		);
@@ -236,7 +249,7 @@ class VS_Mailer_Admin {
 	}
 
 	private static function render_log(): void {
-		$log = VS_Mailer_Logger::get_log();
+		$log     = VS_Mailer_Logger::get_log();
 		$enabled = VS_Mailer_Logger::is_enabled();
 		?>
 		<h2><?php esc_html_e( 'Email Log', 'vs-mailer' ); ?></h2>

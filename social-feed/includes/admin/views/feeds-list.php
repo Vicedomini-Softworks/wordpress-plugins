@@ -7,19 +7,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$feeds = Social_Feed_Feed_Repository::get_all();
+$sf_feeds = Social_Feed_Feed_Repository::get_all();
 ?>
 
 <div class="wrap">
 	<h1><?php esc_html_e( 'Social Feed', 'social-feed' ); ?></h1>
 
-	<?php if ( isset( $_GET['saved'] ) ): ?>
+	<?php if ( isset( $_GET['saved'] ) ) : ?>
 		<div class="notice notice-success is-dismissible">
 			<p><?php esc_html_e( 'Feed saved successfully!', 'social-feed' ); ?></p>
 		</div>
 	<?php endif; ?>
 
-	<?php if ( isset( $_GET['deleted'] ) ): ?>
+	<?php if ( isset( $_GET['deleted'] ) ) : ?>
 		<div class="notice notice-success is-dismissible">
 			<p><?php esc_html_e( 'Feed deleted successfully!', 'social-feed' ); ?></p>
 		</div>
@@ -29,11 +29,11 @@ $feeds = Social_Feed_Feed_Repository::get_all();
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=social-feed-add' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New Feed', 'social-feed' ); ?></a>
 	</p>
 
-	<?php if ( empty( $feeds ) ): ?>
+	<?php if ( empty( $sf_feeds ) ) : ?>
 		<div class="notice notice-info">
 			<p><?php esc_html_e( 'No feeds configured yet. Create your first feed to get started!', 'social-feed' ); ?></p>
 		</div>
-	<?php else: ?>
+	<?php else : ?>
 		<table class="wp-list-table widefat fixed striped">
 			<thead>
 				<tr>
@@ -48,7 +48,7 @@ $feeds = Social_Feed_Feed_Repository::get_all();
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ( $feeds as $slug => $feed ): ?>
+				<?php foreach ( $sf_feeds as $slug => $feed ) : ?>
 					<tr>
 						<td>
 							<strong><?php echo esc_html( $slug ); ?></strong>
@@ -71,10 +71,12 @@ $feeds = Social_Feed_Feed_Repository::get_all();
 							if ( 0 == $age ) {
 								esc_html_e( 'Not cached', 'social-feed' );
 							} else {
-								printf(
-									/* translators: %d: hours ago */
-									esc_html__( '%d hours ago', 'social-feed' ),
-									$age
+								echo esc_html(
+									sprintf(
+										/* translators: %d: cache age in hours */
+										__( '%d hours ago', 'social-feed' ),
+										(int) $age
+									)
 								);
 							}
 							?>

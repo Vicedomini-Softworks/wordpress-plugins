@@ -31,8 +31,8 @@ class Social_Feed_Instagram_Provider extends Social_Feed_Provider {
 		$posts = array();
 		$url   = add_query_arg(
 			array(
-				'fields'   => 'id,caption,media_type,media_url,permalink,timestamp,username',
-				'limit'    => $limit,
+				'fields'       => 'id,caption,media_type,media_url,permalink,timestamp,username',
+				'limit'        => $limit,
 				'access_token' => $creds['access_token'],
 			),
 			'https://graph.facebook.com/v18.0/' . $account_id . '/media'
@@ -45,16 +45,18 @@ class Social_Feed_Instagram_Provider extends Social_Feed_Provider {
 		}
 
 		foreach ( $data['data'] as $raw_post ) {
-			$normalized = $this->normalize_post( array(
-				'id'          => $raw_post['id'] ?? '',
-				'type'        => $this->map_media_type( $raw_post['media_type'] ?? 'IMAGE' ),
-				'media_url'   => $raw_post['media_url'] ?? '',
-				'permalink'   => $raw_post['permalink'] ?? '',
-				'caption'     => $raw_post['caption'] ?? '',
-				'username'    => $raw_post['username'] ?? '',
-				'timestamp'   => $raw_post['timestamp'] ?? '',
-				'profile_url' => 'https://instagram.com/' . ( $raw_post['username'] ?? '' ),
-			) );
+			$normalized = $this->normalize_post(
+				array(
+					'id'          => $raw_post['id'] ?? '',
+					'type'        => $this->map_media_type( $raw_post['media_type'] ?? 'IMAGE' ),
+					'media_url'   => $raw_post['media_url'] ?? '',
+					'permalink'   => $raw_post['permalink'] ?? '',
+					'caption'     => $raw_post['caption'] ?? '',
+					'username'    => $raw_post['username'] ?? '',
+					'timestamp'   => $raw_post['timestamp'] ?? '',
+					'profile_url' => 'https://instagram.com/' . ( $raw_post['username'] ?? '' ),
+				)
+			);
 
 			$posts[] = $normalized;
 		}
@@ -64,15 +66,15 @@ class Social_Feed_Instagram_Provider extends Social_Feed_Provider {
 
 	private function map_media_type( string $type ): string {
 		$map = array(
-			'IMAGE'       => 'image',
-			'VIDEO'       => 'video',
+			'IMAGE'          => 'image',
+			'VIDEO'          => 'video',
 			'CAROUSEL_ALBUM' => 'carousel',
 		);
 		return $map[ $type ] ?? 'image';
 	}
 
 	public static function get_auth_url( string $state ): string {
-		$creds = get_option( 'social_feed_creds_instagram', array() );
+		$creds     = get_option( 'social_feed_creds_instagram', array() );
 		$client_id = $creds['client_id'] ?? '';
 
 		$redirect_uri = rest_url( 'social-feed/v1/oauth/instagram/callback' );
@@ -92,15 +94,18 @@ class Social_Feed_Instagram_Provider extends Social_Feed_Provider {
 	public static function exchange_code( string $code ) {
 		$creds = get_option( 'social_feed_creds_instagram', array() );
 
-		$response = wp_remote_post( 'https://api.instagram.com/oauth/access_token', array(
-			'body' => array(
-				'client_id'     => $creds['client_id'] ?? '',
-				'client_secret' => $creds['client_secret'] ?? '',
-				'grant_type'    => 'authorization_code',
-				'code'          => $code,
-				'redirect_uri'  => rest_url( 'social-feed/v1/oauth/instagram/callback' ),
-			),
-		) );
+		$response = wp_remote_post(
+			'https://api.instagram.com/oauth/access_token',
+			array(
+				'body' => array(
+					'client_id'     => $creds['client_id'] ?? '',
+					'client_secret' => $creds['client_secret'] ?? '',
+					'grant_type'    => 'authorization_code',
+					'code'          => $code,
+					'redirect_uri'  => rest_url( 'social-feed/v1/oauth/instagram/callback' ),
+				),
+			)
+		);
 
 		if ( is_wp_error( $response ) ) {
 			return $response;
@@ -129,11 +134,16 @@ class Social_Feed_Instagram_Provider extends Social_Feed_Provider {
 	private static function exchange_short_lived_token( string $token ): array {
 		$creds = get_option( 'social_feed_creds_instagram', array() );
 
-		$response = wp_remote_get( add_query_arg( array(
-			'grant_type'        => 'ig_exchange_token',
-			'client_secret'     => $creds['client_secret'] ?? '',
-			'access_token'      => $token,
-		), 'https://graph.facebook.com/v18.0/oauth/access_token' ) );
+		$response = wp_remote_get(
+			add_query_arg(
+				array(
+					'grant_type'    => 'ig_exchange_token',
+					'client_secret' => $creds['client_secret'] ?? '',
+					'access_token'  => $token,
+				),
+				'https://graph.facebook.com/v18.0/oauth/access_token'
+			)
+		);
 
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 
@@ -144,20 +154,30 @@ class Social_Feed_Instagram_Provider extends Social_Feed_Provider {
 	}
 
 	private static function get_user_id( string $token ): string {
-		$response = wp_remote_get( add_query_arg( array(
-			'fields'       => 'id',
-			'access_token' => $token,
-		), 'https://graph.facebook.com/v18.0/me' ) );
+		$response = wp_remote_get(
+			add_query_arg(
+				array(
+					'fields'       => 'id',
+					'access_token' => $token,
+				),
+				'https://graph.facebook.com/v18.0/me'
+			)
+		);
 
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 		return $body['id'] ?? '';
 	}
 
 	public function get_embed_html( string $url ): string {
-		$response = wp_remote_get( add_query_arg( array(
-			'url'      => $url,
-			'format'   => 'json',
-		), 'https://api.instagram.com/oembed/' ) );
+		$response = wp_remote_get(
+			add_query_arg(
+				array(
+					'url'    => $url,
+					'format' => 'json',
+				),
+				'https://api.instagram.com/oembed/'
+			)
+		);
 
 		if ( is_wp_error( $response ) ) {
 			return '';
@@ -170,5 +190,4 @@ class Social_Feed_Instagram_Provider extends Social_Feed_Provider {
 	protected function get_api_endpoint( string $endpoint ): string {
 		return 'https://graph.facebook.com/v18.0/' . $endpoint;
 	}
-
 }

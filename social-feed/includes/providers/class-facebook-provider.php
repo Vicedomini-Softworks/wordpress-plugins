@@ -45,16 +45,18 @@ class Social_Feed_Facebook_Provider extends Social_Feed_Provider {
 		}
 
 		foreach ( $data['data'] as $raw_post ) {
-			$normalized = $this->normalize_post( array(
-				'id'          => $raw_post['id'] ?? '',
-				'type'        => $this->map_post_type( $raw_post['type'] ?? 'STATUS' ),
-				'media_url'   => $raw_post['full_picture'] ?? '',
-				'permalink'   => $raw_post['permalink_url'] ?? '',
-				'caption'     => $raw_post['message'] ?? '',
-				'username'    => $raw_post['from']['name'] ?? '',
-				'timestamp'   => $raw_post['created_time'] ?? '',
-				'profile_url' => 'https://facebook.com/' . ( $raw_post['from']['id'] ?? '' ),
-			) );
+			$normalized = $this->normalize_post(
+				array(
+					'id'          => $raw_post['id'] ?? '',
+					'type'        => $this->map_post_type( $raw_post['type'] ?? 'STATUS' ),
+					'media_url'   => $raw_post['full_picture'] ?? '',
+					'permalink'   => $raw_post['permalink_url'] ?? '',
+					'caption'     => $raw_post['message'] ?? '',
+					'username'    => $raw_post['from']['name'] ?? '',
+					'timestamp'   => $raw_post['created_time'] ?? '',
+					'profile_url' => 'https://facebook.com/' . ( $raw_post['from']['id'] ?? '' ),
+				)
+			);
 
 			$posts[] = $normalized;
 		}
@@ -64,18 +66,18 @@ class Social_Feed_Facebook_Provider extends Social_Feed_Provider {
 
 	private function map_post_type( string $type ): string {
 		$map = array(
-			'PHOTO'      => 'image',
-			'VIDEO'      => 'video',
-			'LINK'       => 'link',
-			'STATUS'     => 'text',
-			'COVER'      => 'image',
-			'OFFER'      => 'link',
+			'PHOTO'  => 'image',
+			'VIDEO'  => 'video',
+			'LINK'   => 'link',
+			'STATUS' => 'text',
+			'COVER'  => 'image',
+			'OFFER'  => 'link',
 		);
 		return $map[ $type ] ?? 'link';
 	}
 
 	public static function get_auth_url( string $state ): string {
-		$creds = get_option( 'social_feed_creds_facebook', array() );
+		$creds     = get_option( 'social_feed_creds_facebook', array() );
 		$client_id = $creds['client_id'] ?? '';
 
 		$redirect_uri = rest_url( 'social-feed/v1/oauth/facebook/callback' );
@@ -96,13 +98,18 @@ class Social_Feed_Facebook_Provider extends Social_Feed_Provider {
 		$creds = get_option( 'social_feed_creds_facebook', array() );
 
 		// Step 1: Exchange code for short-lived token
-		$response = wp_remote_get( add_query_arg( array(
-			'client_id'     => $creds['client_id'] ?? '',
-			'client_secret' => $creds['client_secret'] ?? '',
-			'grant_type'    => 'authorization_code',
-			'code'          => $code,
-			'redirect_uri'  => rest_url( 'social-feed/v1/oauth/facebook/callback' ),
-		), 'https://graph.facebook.com/v18.0/oauth/access_token' ) );
+		$response = wp_remote_get(
+			add_query_arg(
+				array(
+					'client_id'     => $creds['client_id'] ?? '',
+					'client_secret' => $creds['client_secret'] ?? '',
+					'grant_type'    => 'authorization_code',
+					'code'          => $code,
+					'redirect_uri'  => rest_url( 'social-feed/v1/oauth/facebook/callback' ),
+				),
+				'https://graph.facebook.com/v18.0/oauth/access_token'
+			)
+		);
 
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 
@@ -129,12 +136,17 @@ class Social_Feed_Facebook_Provider extends Social_Feed_Provider {
 	private static function exchange_for_long_lived( string $token ): array {
 		$creds = get_option( 'social_feed_creds_facebook', array() );
 
-		$response = wp_remote_get( add_query_arg( array(
-			'grant_type'   => 'fb_exchange_token',
-			'client_id'    => $creds['client_id'] ?? '',
-			'client_secret'=> $creds['client_secret'] ?? '',
-			'fb_exchange_token' => $token,
-		), 'https://graph.facebook.com/v18.0/oauth/access_token' ) );
+		$response = wp_remote_get(
+			add_query_arg(
+				array(
+					'grant_type'        => 'fb_exchange_token',
+					'client_id'         => $creds['client_id'] ?? '',
+					'client_secret'     => $creds['client_secret'] ?? '',
+					'fb_exchange_token' => $token,
+				),
+				'https://graph.facebook.com/v18.0/oauth/access_token'
+			)
+		);
 
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 
@@ -145,10 +157,15 @@ class Social_Feed_Facebook_Provider extends Social_Feed_Provider {
 	}
 
 	private static function get_page_token( string $user_token ): array {
-		$response = wp_remote_get( add_query_arg( array(
-			'fields'       => 'id,access_token',
-			'access_token' => $user_token,
-		), 'https://graph.facebook.com/v18.0/me/accounts' ) );
+		$response = wp_remote_get(
+			add_query_arg(
+				array(
+					'fields'       => 'id,access_token',
+					'access_token' => $user_token,
+				),
+				'https://graph.facebook.com/v18.0/me/accounts'
+			)
+		);
 
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 
@@ -160,10 +177,15 @@ class Social_Feed_Facebook_Provider extends Social_Feed_Provider {
 	}
 
 	public function get_embed_html( string $url ): string {
-		$response = wp_remote_get( add_query_arg( array(
-			'url'      => $url,
-			'format'   => 'json',
-		), 'https://www.facebook.com/plugins/post/oembed.json/' ) );
+		$response = wp_remote_get(
+			add_query_arg(
+				array(
+					'url'    => $url,
+					'format' => 'json',
+				),
+				'https://www.facebook.com/plugins/post/oembed.json/'
+			)
+		);
 
 		if ( is_wp_error( $response ) ) {
 			return '';
@@ -176,5 +198,4 @@ class Social_Feed_Facebook_Provider extends Social_Feed_Provider {
 	protected function get_api_endpoint( string $endpoint ): string {
 		return 'https://graph.facebook.com/v18.0/' . $endpoint;
 	}
-
 }

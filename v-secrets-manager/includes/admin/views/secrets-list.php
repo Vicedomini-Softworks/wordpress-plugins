@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$secrets = VS_Secrets_Manager_Secret_Manager::get_secrets_list();
+$secrets    = VS_Secrets_Manager_Secret_Manager::get_secrets_list();
 $aws_loaded = class_exists( 'Aws\SecretsManager\SecretsManagerClient' );
 ?>
 <div class="wrap">
@@ -46,7 +46,7 @@ $aws_loaded = class_exists( 'Aws\SecretsManager\SecretsManagerClient' );
 						</span>
 					</td>
 					<td><?php echo esc_html( ucfirst( $secret->status ) ); ?></td>
-					<td><?php echo esc_html( $secret->last_rotated ?: '—' ); ?></td>
+					<td><?php echo esc_html( $secret->last_rotated ? $secret->last_rotated : '—' ); ?></td>
 					<td>
 						<button type="button" class="button vs-reveal-btn" data-name="<?php echo esc_attr( $secret->name ); ?>">
 							<?php echo esc_html__( 'Reveal', 'vs-secrets-manager' ); ?>

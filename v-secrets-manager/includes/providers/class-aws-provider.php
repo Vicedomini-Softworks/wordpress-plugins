@@ -26,14 +26,16 @@ class VS_Secrets_Manager_AWS_Provider extends VS_Secrets_Manager_Provider {
 		}
 
 		try {
-			$this->client = new Aws\SecretsManager\SecretsManagerClient( array(
-				'version'     => '2017-10-17',
-				'region'      => $region,
-				'credentials' => array(
-					'key'    => $access_key,
-					'secret' => $secret_key,
-				),
-			) );
+			$this->client = new Aws\SecretsManager\SecretsManagerClient(
+				array(
+					'version'     => '2017-10-17',
+					'region'      => $region,
+					'credentials' => array(
+						'key'    => $access_key,
+						'secret' => $secret_key,
+					),
+				)
+			);
 		} catch ( Exception $e ) {
 			return null;
 		}
@@ -73,18 +75,22 @@ class VS_Secrets_Manager_AWS_Provider extends VS_Secrets_Manager_Provider {
 		}
 
 		try {
-			$client->createSecret( array(
-				'Name'         => $name,
-				'SecretString' => $value,
-				'Description'  => $meta['title'] ?? '',
-			) );
+			$client->createSecret(
+				array(
+					'Name'         => $name,
+					'SecretString' => $value,
+					'Description'  => $meta['title'] ?? '',
+				)
+			);
 		} catch ( Aws\Exception\AwsException $e ) {
 			if ( 'ResourceExistsException' === $e->getAwsErrorCode() ) {
 				try {
-					$client->putSecretValue( array(
-						'SecretId'     => $name,
-						'SecretString' => $value,
-					) );
+					$client->putSecretValue(
+						array(
+							'SecretId'     => $name,
+							'SecretString' => $value,
+						)
+					);
 				} catch ( Exception $put_e ) {
 					return false;
 				}
@@ -106,10 +112,12 @@ class VS_Secrets_Manager_AWS_Provider extends VS_Secrets_Manager_Provider {
 		}
 
 		try {
-			$client->deleteSecret( array(
-				'SecretId'                   => $name,
-				'ForceDeleteWithoutRecovery' => true,
-			) );
+			$client->deleteSecret(
+				array(
+					'SecretId'                   => $name,
+					'ForceDeleteWithoutRecovery' => true,
+				)
+			);
 		} catch ( Exception $e ) {
 			return false;
 		}
@@ -146,21 +154,23 @@ class VS_Secrets_Manager_AWS_Provider extends VS_Secrets_Manager_Provider {
 		global $wpdb;
 
 		$title    = $meta['title'] ?? $name;
-		$existing = $wpdb->get_var( $wpdb->prepare(
-			"SELECT id FROM {$wpdb->prefix}vsecrets_secrets WHERE name = %s",
-			$name
-		) );
+		$existing = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT id FROM {$wpdb->prefix}vsecrets_secrets WHERE name = %s",
+				$name
+			)
+		);
 
 		if ( $existing ) {
 			$wpdb->update(
 				$wpdb->prefix . 'vsecrets_secrets',
 				array(
-					'title'       => $title,
-					'provider'    => 'aws',
-					'value'       => $name,
-					'status'      => $meta['status'] ?? 'active',
+					'title'        => $title,
+					'provider'     => 'aws',
+					'value'        => $name,
+					'status'       => $meta['status'] ?? 'active',
 					'last_rotated' => current_time( 'mysql', true ),
-					'updated_at'  => current_time( 'mysql', true ),
+					'updated_at'   => current_time( 'mysql', true ),
 				),
 				array( 'id' => $existing )
 			);
@@ -168,14 +178,14 @@ class VS_Secrets_Manager_AWS_Provider extends VS_Secrets_Manager_Provider {
 			$wpdb->insert(
 				$wpdb->prefix . 'vsecrets_secrets',
 				array(
-					'name'        => $name,
-					'title'       => $title,
-					'provider'    => 'aws',
-					'value'       => $name,
-					'status'      => $meta['status'] ?? 'active',
+					'name'         => $name,
+					'title'        => $title,
+					'provider'     => 'aws',
+					'value'        => $name,
+					'status'       => $meta['status'] ?? 'active',
 					'last_rotated' => current_time( 'mysql', true ),
-					'created_at'  => current_time( 'mysql', true ),
-					'updated_at'  => current_time( 'mysql', true ),
+					'created_at'   => current_time( 'mysql', true ),
+					'updated_at'   => current_time( 'mysql', true ),
 				)
 			);
 		}

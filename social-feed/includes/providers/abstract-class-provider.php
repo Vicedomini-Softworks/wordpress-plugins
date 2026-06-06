@@ -70,14 +70,14 @@ abstract class Social_Feed_Provider {
 		$meta = get_option( 'social_feed_meta_' . $p, array() );
 
 		return array(
-			'client_id'     => vs_secrets_manager_get( 'social_feed_' . $p . '_client_id' ) ?? '',
-			'client_secret' => vs_secrets_manager_get( 'social_feed_' . $p . '_client_secret' ) ?? '',
-			'access_token'  => vs_secrets_manager_get( 'social_feed_' . $p . '_access_token' ) ?? '',
-			'refresh_token' => vs_secrets_manager_get( 'social_feed_' . $p . '_refresh_token' ) ?? '',
-			'token_expiry'  => $meta['token_expiry'] ?? 0,
-			'connected_at'  => $meta['connected_at'] ?? 0,
-			'account_id'    => $meta['account_id'] ?? '',
-			'cache_reset_at'=> $meta['cache_reset_at'] ?? 0,
+			'client_id'      => vs_secrets_manager_get( 'social_feed_' . $p . '_client_id' ) ?? '',
+			'client_secret'  => vs_secrets_manager_get( 'social_feed_' . $p . '_client_secret' ) ?? '',
+			'access_token'   => vs_secrets_manager_get( 'social_feed_' . $p . '_access_token' ) ?? '',
+			'refresh_token'  => vs_secrets_manager_get( 'social_feed_' . $p . '_refresh_token' ) ?? '',
+			'token_expiry'   => $meta['token_expiry'] ?? 0,
+			'connected_at'   => $meta['connected_at'] ?? 0,
+			'account_id'     => $meta['account_id'] ?? '',
+			'cache_reset_at' => $meta['cache_reset_at'] ?? 0,
 		);
 	}
 
@@ -96,21 +96,24 @@ abstract class Social_Feed_Provider {
 				VS_Secrets_Manager_Secret_Manager::set(
 					'social_feed_' . $platform . '_' . $field,
 					$value,
-					array( 'title' => 'Social Feed ' . $platform . ' ' . $field, 'provider' => 'db' )
+					array(
+						'title'    => 'Social Feed ' . $platform . ' ' . $field,
+						'provider' => 'db',
+					)
 				);
 			}
 		}
 
-		$meta_option = 'social_feed_meta_' . $platform;
+		$meta_option  = 'social_feed_meta_' . $platform;
 		$current_meta = get_option( $meta_option, array() );
 
 		return update_option(
 			$meta_option,
 			array(
-				'token_expiry'  => time() + ( $tokens['expires_in'] ?? 3600 ),
-				'connected_at'  => time(),
-				'account_id'    => $tokens['account_id'] ?? '',
-				'cache_reset_at'=> $current_meta['cache_reset_at'] ?? 0,
+				'token_expiry'   => time() + ( $tokens['expires_in'] ?? 3600 ),
+				'connected_at'   => time(),
+				'account_id'     => $tokens['account_id'] ?? '',
+				'cache_reset_at' => $current_meta['cache_reset_at'] ?? 0,
 			),
 			false
 		);
@@ -181,5 +184,4 @@ abstract class Social_Feed_Provider {
 	 * Get platform-specific API endpoint
 	 */
 	abstract protected function get_api_endpoint( string $endpoint ): string;
-
 }

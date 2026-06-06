@@ -23,7 +23,7 @@ class Social_Feed_Cache_Manager {
 	 * Set cached feed data
 	 */
 	public static function set( string $feed_slug, array $data, int $hours ): bool {
-		$cache_key = 'social_feed_cache_' . $feed_slug;
+		$cache_key  = 'social_feed_cache_' . $feed_slug;
 		$expiration = $hours * HOUR_IN_SECONDS;
 
 		set_transient( $cache_key, $data, $expiration );
@@ -74,7 +74,7 @@ class Social_Feed_Cache_Manager {
 			return;
 		}
 
-		$files = glob( $cache_dir . '*' . DIRECTORY_SEPARATOR . $feed_slug . '*');
+		$files = glob( $cache_dir . '*' . DIRECTORY_SEPARATOR . $feed_slug . '*' );
 		if ( is_array( $files ) ) {
 			foreach ( $files as $file ) {
 				if ( is_file( $file ) ) {
@@ -92,7 +92,7 @@ class Social_Feed_Cache_Manager {
 			return;
 		}
 
-		$files = glob( $dir . '*');
+		$files = glob( $dir . '*' );
 		if ( is_array( $files ) ) {
 			foreach ( $files as $file ) {
 				if ( is_dir( $file ) ) {
@@ -128,5 +128,4 @@ class Social_Feed_Cache_Manager {
 		$age = self::get_cache_age( $feed_slug );
 		return $age <= $max_hours;
 	}
-
 }

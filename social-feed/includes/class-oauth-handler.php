@@ -170,5 +170,4 @@ class Social_Feed_OAuth_Handler {
 		$class = $map[ $platform ] ?? null;
 		return $class && class_exists( $class ) ? $class : null;
 	}
-
 }

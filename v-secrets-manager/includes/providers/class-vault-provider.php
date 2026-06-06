@@ -78,15 +78,20 @@ class VS_Secrets_Manager_Vault_Provider extends VS_Secrets_Manager_Provider {
 			$headers['X-Vault-Namespace'] = $namespace;
 		}
 
-		$body = wp_json_encode( array(
-			'data' => array( 'value' => $value ),
-		) );
+		$body = wp_json_encode(
+			array(
+				'data' => array( 'value' => $value ),
+			)
+		);
 
-		$response = wp_remote_post( $url, array(
-			'headers' => $headers,
-			'body'    => $body,
-			'method'  => 'PUT',
-		) );
+		$response = wp_remote_post(
+			$url,
+			array(
+				'headers' => $headers,
+				'body'    => $body,
+				'method'  => 'PUT',
+			)
+		);
 
 		if ( is_wp_error( $response ) ) {
 			return false;
@@ -123,10 +128,13 @@ class VS_Secrets_Manager_Vault_Provider extends VS_Secrets_Manager_Provider {
 			$headers['X-Vault-Namespace'] = $namespace;
 		}
 
-		$response = wp_remote_request( $url, array(
-			'headers' => $headers,
-			'method'  => 'DELETE',
-		) );
+		$response = wp_remote_request(
+			$url,
+			array(
+				'headers' => $headers,
+				'method'  => 'DELETE',
+			)
+		);
 
 		if ( is_wp_error( $response ) ) {
 			return false;
@@ -149,9 +157,12 @@ class VS_Secrets_Manager_Vault_Provider extends VS_Secrets_Manager_Provider {
 		}
 
 		$url      = untrailingslashit( $address ) . '/v1/sys/health';
-		$response = wp_remote_get( $url, array(
-			'headers' => array( 'X-Vault-Token' => $token ),
-		) );
+		$response = wp_remote_get(
+			$url,
+			array(
+				'headers' => array( 'X-Vault-Token' => $token ),
+			)
+		);
 
 		if ( is_wp_error( $response ) ) {
 			return array(
@@ -172,6 +183,7 @@ class VS_Secrets_Manager_Vault_Provider extends VS_Secrets_Manager_Provider {
 		return array(
 			'success' => false,
 			'message' => sprintf(
+				/* translators: %d: HTTP status code */
 				__( 'Vault returned HTTP %d.', 'vs-secrets-manager' ),
 				$code
 			),
@@ -182,21 +194,23 @@ class VS_Secrets_Manager_Vault_Provider extends VS_Secrets_Manager_Provider {
 		global $wpdb;
 
 		$title    = $meta['title'] ?? $name;
-		$existing = $wpdb->get_var( $wpdb->prepare(
-			"SELECT id FROM {$wpdb->prefix}vsecrets_secrets WHERE name = %s",
-			$name
-		) );
+		$existing = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT id FROM {$wpdb->prefix}vsecrets_secrets WHERE name = %s",
+				$name
+			)
+		);
 
 		if ( $existing ) {
 			$wpdb->update(
 				$wpdb->prefix . 'vsecrets_secrets',
 				array(
-					'title'       => $title,
-					'provider'    => 'vault',
-					'value'       => $name,
-					'status'      => $meta['status'] ?? 'active',
+					'title'        => $title,
+					'provider'     => 'vault',
+					'value'        => $name,
+					'status'       => $meta['status'] ?? 'active',
 					'last_rotated' => current_time( 'mysql', true ),
-					'updated_at'  => current_time( 'mysql', true ),
+					'updated_at'   => current_time( 'mysql', true ),
 				),
 				array( 'id' => $existing )
 			);
@@ -204,14 +218,14 @@ class VS_Secrets_Manager_Vault_Provider extends VS_Secrets_Manager_Provider {
 			$wpdb->insert(
 				$wpdb->prefix . 'vsecrets_secrets',
 				array(
-					'name'        => $name,
-					'title'       => $title,
-					'provider'    => 'vault',
-					'value'       => $name,
-					'status'      => $meta['status'] ?? 'active',
+					'name'         => $name,
+					'title'        => $title,
+					'provider'     => 'vault',
+					'value'        => $name,
+					'status'       => $meta['status'] ?? 'active',
 					'last_rotated' => current_time( 'mysql', true ),
-					'created_at'  => current_time( 'mysql', true ),
-					'updated_at'  => current_time( 'mysql', true ),
+					'created_at'   => current_time( 'mysql', true ),
+					'updated_at'   => current_time( 'mysql', true ),
 				)
 			);
 		}

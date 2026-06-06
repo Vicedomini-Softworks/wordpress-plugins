@@ -12,5 +12,4 @@ class Social_Feed_Deactivator {
 	public static function deactivate() {
 		flush_rewrite_rules();
 	}
-
 }

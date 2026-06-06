@@ -82,5 +82,4 @@ class Social_Feed_Public {
 		</script>
 		<?php
 	}
-
 }

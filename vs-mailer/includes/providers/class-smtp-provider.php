@@ -11,12 +11,12 @@ class VS_Mailer_SMTP_Provider extends VS_Mailer_Mail_Provider {
 	}
 
 	public static function configure( PHPMailer\PHPMailer\PHPMailer $phpmailer ): void {
-		$host        = get_option( 'vs_mailer_smtp_host', '' );
-		$port        = get_option( 'vs_mailer_smtp_port', 587 );
-		$encryption  = get_option( 'vs_mailer_smtp_encryption', 'tls' );
-		$auth        = get_option( 'vs_mailer_smtp_auth', 'yes' );
-		$username    = get_option( 'vs_mailer_smtp_username', '' );
-		$password    = vs_secrets_manager_get( 'vs_mailer_smtp_password' ) ?? '';
+		$host       = get_option( 'vs_mailer_smtp_host', '' );
+		$port       = get_option( 'vs_mailer_smtp_port', 587 );
+		$encryption = get_option( 'vs_mailer_smtp_encryption', 'tls' );
+		$auth       = get_option( 'vs_mailer_smtp_auth', 'yes' );
+		$username   = get_option( 'vs_mailer_smtp_username', '' );
+		$password   = vs_secrets_manager_get( 'vs_mailer_smtp_password' ) ?? '';
 
 		if ( empty( $host ) ) {
 			return;
@@ -40,7 +40,7 @@ class VS_Mailer_SMTP_Provider extends VS_Mailer_Mail_Provider {
 			$phpmailer->SMTPAuth = false;
 		}
 
-		$phpmailer->From = self::get_default_from_email();
+		$phpmailer->From     = self::get_default_from_email();
 		$phpmailer->FromName = self::get_default_from_name();
 	}
 
@@ -62,7 +62,8 @@ class VS_Mailer_SMTP_Provider extends VS_Mailer_Mail_Provider {
 			return array(
 				'success' => true,
 				'message' => sprintf(
-					__( 'Successfully connected to %s:%d.', 'vs-mailer' ),
+					/* translators: 1: SMTP host, 2: port number */
+					__( 'Successfully connected to %1$s:%2$d.', 'vs-mailer' ),
 					$host,
 					$port
 				),
@@ -72,7 +73,8 @@ class VS_Mailer_SMTP_Provider extends VS_Mailer_Mail_Provider {
 		return array(
 			'success' => false,
 			'message' => sprintf(
-				__( 'Connection to %s:%d failed: %s', 'vs-mailer' ),
+				/* translators: 1: SMTP host, 2: port number, 3: error message */
+				__( 'Connection to %1$s:%2$d failed: %3$s', 'vs-mailer' ),
 				$host,
 				$port,
 				$errstr

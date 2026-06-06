@@ -19,8 +19,8 @@ abstract class VS_Mailer_Mail_Provider {
 		foreach ( $headers as $header ) {
 			$parts = explode( ':', $header, 2 );
 			if ( 2 === count( $parts ) ) {
-				$key              = strtolower( trim( $parts[0] ) );
-				$parsed[ $key ]   = trim( $parts[1] );
+				$key            = strtolower( trim( $parts[0] ) );
+				$parsed[ $key ] = trim( $parts[1] );
 			}
 		}
 

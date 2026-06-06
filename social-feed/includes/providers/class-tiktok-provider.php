@@ -45,16 +45,18 @@ class Social_Feed_TikTok_Provider extends Social_Feed_Provider {
 		}
 
 		foreach ( $data['data'] as $raw_post ) {
-			$normalized = $this->normalize_post( array(
-				'id'          => $raw_post['id'] ?? '',
-				'type'        => 'video',
-				'media_url'   => $raw_post['cover_url'] ?? '',
-				'permalink'   => $raw_post['share_url'] ?? '',
-				'caption'     => $raw_post['description'] ?? '',
-				'username'    => $raw_post['author_username'] ?? '',
-				'timestamp'   => $raw_post['create_time'] ?? '',
-				'profile_url' => 'https://tiktok.com/@' . ( $raw_post['author_username'] ?? '' ),
-			) );
+			$normalized = $this->normalize_post(
+				array(
+					'id'          => $raw_post['id'] ?? '',
+					'type'        => 'video',
+					'media_url'   => $raw_post['cover_url'] ?? '',
+					'permalink'   => $raw_post['share_url'] ?? '',
+					'caption'     => $raw_post['description'] ?? '',
+					'username'    => $raw_post['author_username'] ?? '',
+					'timestamp'   => $raw_post['create_time'] ?? '',
+					'profile_url' => 'https://tiktok.com/@' . ( $raw_post['author_username'] ?? '' ),
+				)
+			);
 
 			$posts[] = $normalized;
 		}
@@ -63,7 +65,7 @@ class Social_Feed_TikTok_Provider extends Social_Feed_Provider {
 	}
 
 	public static function get_auth_url( string $state ): string {
-		$creds = get_option( 'social_feed_creds_tiktok', array() );
+		$creds     = get_option( 'social_feed_creds_tiktok', array() );
 		$client_id = $creds['client_id'] ?? '';
 
 		$redirect_uri = rest_url( 'social-feed/v1/oauth/tiktok/callback' );
@@ -83,15 +85,18 @@ class Social_Feed_TikTok_Provider extends Social_Feed_Provider {
 	public static function exchange_code( string $code ) {
 		$creds = get_option( 'social_feed_creds_tiktok', array() );
 
-		$response = wp_remote_post( 'https://open.tiktokapis.com/v2/oauth/token/', array(
-			'body' => array(
-				'client_key'    => $creds['client_id'] ?? '',
-				'client_secret' => $creds['client_secret'] ?? '',
-				'grant_type'    => 'authorization_code',
-				'code'          => $code,
-				'redirect_uri'  => rest_url( 'social-feed/v1/oauth/tiktok/callback' ),
-			),
-		) );
+		$response = wp_remote_post(
+			'https://open.tiktokapis.com/v2/oauth/token/',
+			array(
+				'body' => array(
+					'client_key'    => $creds['client_id'] ?? '',
+					'client_secret' => $creds['client_secret'] ?? '',
+					'grant_type'    => 'authorization_code',
+					'code'          => $code,
+					'redirect_uri'  => rest_url( 'social-feed/v1/oauth/tiktok/callback' ),
+				),
+			)
+		);
 
 		if ( is_wp_error( $response ) ) {
 			return $response;
@@ -114,20 +119,30 @@ class Social_Feed_TikTok_Provider extends Social_Feed_Provider {
 	}
 
 	private static function get_user_info( string $token ): array {
-		$response = wp_remote_get( add_query_arg( array(
-			'fields'       => 'open_id,union_id,avatar_url_display,display_name,username',
-			'access_token' => $token,
-		), 'https://open.tiktokapis.com/v2/user/info/' ) );
+		$response = wp_remote_get(
+			add_query_arg(
+				array(
+					'fields'       => 'open_id,union_id,avatar_url_display,display_name,username',
+					'access_token' => $token,
+				),
+				'https://open.tiktokapis.com/v2/user/info/'
+			)
+		);
 
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 		return $body['data'] ?? array();
 	}
 
 	public function get_embed_html( string $url ): string {
-		$response = wp_remote_get( add_query_arg( array(
-			'url'      => $url,
-			'format'   => 'json',
-		), 'https://www.tiktok.com/oembed' ) );
+		$response = wp_remote_get(
+			add_query_arg(
+				array(
+					'url'    => $url,
+					'format' => 'json',
+				),
+				'https://www.tiktok.com/oembed'
+			)
+		);
 
 		if ( is_wp_error( $response ) ) {
 			return '';
@@ -140,5 +155,4 @@ class Social_Feed_TikTok_Provider extends Social_Feed_Provider {
 	protected function get_api_endpoint( string $endpoint ): string {
 		return 'https://open.tiktokapis.com/v2/' . $endpoint;
 	}
-
 }

@@ -123,9 +123,11 @@ class VS_Secrets_Manager_Admin {
 		$value = VS_Secrets_Manager_Secret_Manager::get( $name );
 
 		if ( null === $value ) {
-			wp_send_json_error( array(
-				'message' => __( 'Secret not found.', 'vs-secrets-manager' ),
-			) );
+			wp_send_json_error(
+				array(
+					'message' => __( 'Secret not found.', 'vs-secrets-manager' ),
+				)
+			);
 		}
 
 		wp_send_json_success( array( 'value' => $value ) );

@@ -84,10 +84,12 @@ class VS_Secrets_Manager_Secret_Manager {
 	public static function get_record( string $name ): ?object {
 		global $wpdb;
 
-		$row = $wpdb->get_row( $wpdb->prepare(
-			"SELECT * FROM {$wpdb->prefix}vsecrets_secrets WHERE name = %s",
-			$name
-		) );
+		$row = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT * FROM {$wpdb->prefix}vsecrets_secrets WHERE name = %s",
+				$name
+			)
+		);
 
 		return $row ? $row : null;
 	}
@@ -95,10 +97,12 @@ class VS_Secrets_Manager_Secret_Manager {
 	public static function get_record_by_id( int $id ): ?object {
 		global $wpdb;
 
-		$row = $wpdb->get_row( $wpdb->prepare(
-			"SELECT * FROM {$wpdb->prefix}vsecrets_secrets WHERE id = %d",
-			$id
-		) );
+		$row = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT * FROM {$wpdb->prefix}vsecrets_secrets WHERE id = %d",
+				$id
+			)
+		);
 
 		return $row ? $row : null;
 	}
@@ -120,6 +124,7 @@ class VS_Secrets_Manager_Secret_Manager {
 			return array(
 				'success' => false,
 				'message' => sprintf(
+					/* translators: %s: provider name */
 					__( 'Unknown provider: %s', 'vs-secrets-manager' ),
 					$provider_name
 				),

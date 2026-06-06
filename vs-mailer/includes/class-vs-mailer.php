@@ -85,7 +85,7 @@ class VS_Mailer {
 		VS_Mailer_SMTP_Provider::configure( $phpmailer );
 	}
 
-	public static function handle_pre_wp_mail( $null, array $atts ) {
+	public static function handle_pre_wp_mail( $pre_wp_mail, array $atts ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundBeforeLastUsed
 		$mailer = get_option( 'vs_mailer_mailer', 'smtp' );
 
 		if ( 'brevo' === $mailer ) {

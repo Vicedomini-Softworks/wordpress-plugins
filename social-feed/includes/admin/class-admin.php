@@ -72,7 +72,7 @@ class Social_Feed_Admin {
 	 * Platform settings page
 	 */
 	public static function page_platform_settings(): void {
-		$platform = isset( $_GET['platform'] ) ? sanitize_key( $_GET['platform'] ) : '';
+		$platform  = isset( $_GET['platform'] ) ? sanitize_key( $_GET['platform'] ) : '';
 		$connected = isset( $_GET['connected'] );
 
 		require_once SOCIAL_FEED_PLUGIN_DIR . 'includes/admin/views/platform-settings.php';
@@ -94,7 +94,7 @@ class Social_Feed_Admin {
 				'slug'        => isset( $_POST['feed_slug'] ) ? sanitize_key( $_POST['feed_slug'] ) : '',
 				'platform'    => isset( $_POST['platform'] ) ? sanitize_key( $_POST['platform'] ) : '',
 				'mode'        => isset( $_POST['mode'] ) ? sanitize_key( $_POST['mode'] ) : 'embed',
-				'account'     => isset( $_POST['account'] ) ? sanitize_text_field( $_POST['account'] ) : '',
+				'account'     => isset( $_POST['account'] ) ? sanitize_text_field( wp_unslash( $_POST['account'] ) ) : '',
 				'cache_hours' => isset( $_POST['cache_hours'] ) ? intval( $_POST['cache_hours'] ) : 8,
 				'display'     => array(
 					'type'           => isset( $_POST['display_type'] ) ? sanitize_key( $_POST['display_type'] ) : 'grid',
@@ -114,11 +114,14 @@ class Social_Feed_Admin {
 				wp_redirect( admin_url( 'admin.php?page=social-feed&saved=1' ) );
 				exit;
 			} else {
-				add_action( 'admin_notices', function() use ( $errors ) {
-					foreach ( $errors as $error ) {
-						echo '<div class="error"><p>' . esc_html( $error ) . '</p></div>';
+				add_action(
+					'admin_notices',
+					function () use ( $errors ) {
+						foreach ( $errors as $error ) {
+							echo '<div class="error"><p>' . esc_html( $error ) . '</p></div>';
+						}
 					}
-				} );
+				);
 			}
 		}
 
@@ -149,5 +152,4 @@ class Social_Feed_Admin {
 			exit;
 		}
 	}
-
 }
