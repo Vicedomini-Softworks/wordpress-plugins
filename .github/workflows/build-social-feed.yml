@@ -106,7 +106,8 @@ jobs:
 
       - name: Get plugin version
         id: version
-        run: echo "version=$(grep -oP '(?<=\* Version: )\S+' social-feed.php)" >> $GITHUB_OUTPUT
+        run: |
+          echo "version=$(grep -oP '(?<=\* Version: )\S+' social-feed.php)" >> "$GITHUB_OUTPUT"
 
       - name: Build plugin ZIP
         run: |
