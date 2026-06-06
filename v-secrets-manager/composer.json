@@ -4,8 +4,10 @@
 	"type": "wordpress-plugin",
 	"license": "GPL-3.0-only",
 	"require": {
-		"php": ">=7.2.24",
-		"aws/aws-sdk-php": "^3.0"
+		"php": ">=7.2.24"
+	},
+	"suggest": {
+		"aws/aws-sdk-php": "Required for AWS Secrets Manager provider (requires PHP >=8.1)"
 	},
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
