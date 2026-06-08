@@ -44,6 +44,9 @@ class VS_Secrets_Manager_Secret_Manager {
 		return $provider->get( $name );
 	}
 
+	/**
+	 * @phpstan-impure Persists the secret via the resolved provider.
+	 */
 	public static function set( string $name, string $value, array $meta = array() ): bool {
 		$provider_name = $meta['provider'] ?? 'db';
 		$provider      = self::get_provider( $provider_name );
@@ -55,6 +58,9 @@ class VS_Secrets_Manager_Secret_Manager {
 		return $provider->set( $name, $value, $meta );
 	}
 
+	/**
+	 * @phpstan-impure Removes the secret via the resolved provider.
+	 */
 	public static function delete( string $name ): bool {
 		$record = self::get_record( $name );
 

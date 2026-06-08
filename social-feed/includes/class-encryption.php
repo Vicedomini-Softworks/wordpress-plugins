@@ -34,7 +34,7 @@ class Social_Feed_Encryption {
 	}
 
 	public static function decrypt( string $value ): string {
-		if ( empty( $value ) || ! is_string( $value ) ) {
+		if ( empty( $value ) ) {
 			return $value;
 		}
 

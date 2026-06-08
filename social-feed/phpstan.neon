@@ -6,9 +6,9 @@ parameters:
     paths:
         - .
     excludePaths:
-        - vendor
-        - tests
-        - node_modules
+        - vendor (?)
+        - tests (?)
+        - node_modules (?)
     bootstrapFiles:
         - phpstan-bootstrap.php
     parallel:

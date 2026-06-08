@@ -16,12 +16,18 @@ if ( ! function_exists( 'vs_secrets_manager_get' ) ) {
 
 if ( ! class_exists( 'VS_Secrets_Manager_Secret_Manager' ) ) {
 	class VS_Secrets_Manager_Secret_Manager {
+		/**
+		 * @phpstan-impure Persists the secret via the resolved provider.
+		 */
 		public static function set( string $name, string $value, array $meta = array() ): bool {
 			return false;
 		}
 		public static function get( string $name ): ?string {
 			return null;
 		}
+		/**
+		 * @phpstan-impure Removes the secret via the resolved provider.
+		 */
 		public static function delete( string $name ): bool {
 			return false;
 		}
