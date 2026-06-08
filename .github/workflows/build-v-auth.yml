@@ -1,0 +1,61 @@
+name: Build V-Auth
+
+on:
+  push:
+    paths:
+      - 'v-auth/**'
+      - '.github/workflows/build-v-auth.yml'
+  pull_request:
+    paths:
+      - 'v-auth/**'
+      - '.github/workflows/build-v-auth.yml'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: v-auth
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer:v2
+
+      - name: Install Composer dependencies
+        run: composer install --optimize-autoloader
+
+      - name: Run PHPCS
+        run: composer run phpcs
+
+      - name: Run PHPStan
+        run: composer run phpstan
+
+  test-e2e:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: v-auth/tests/e2e
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Run e2e tests
+        run: npm test
+        env:
+          CI: true
