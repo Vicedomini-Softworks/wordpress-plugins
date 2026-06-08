@@ -1,9 +1,9 @@
 === VS Mailer ===
 Contributors: vicedominisoftworks
 Tags: smtp, brevo, mailgun, email, wp-mail, phpmailer
-Requires at least: 6.9
-Tested up to: 6.9
-Requires PHP: 7.2.24
+Requires at least: 7.0
+Tested up to: 7.0
+Requires PHP: 8.1
 Stable tag: 1.0.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html

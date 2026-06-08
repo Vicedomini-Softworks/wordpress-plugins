@@ -18,10 +18,6 @@ class VS_Secrets_Manager_Encryption {
 		$key = self::get_key();
 		$iv  = openssl_random_pseudo_bytes( 16 );
 
-		if ( false === $iv ) {
-			return $value;
-		}
-
 		$encrypted = openssl_encrypt( $value, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv );
 
 		if ( false === $encrypted ) {

@@ -2,7 +2,7 @@
 
 ## Repo
 
-GPL v3 monorepo — two WordPress plugins in top-level directories. Target WP 6.9+, PHP 7.2.24+.
+GPL v3 monorepo — two WordPress plugins in top-level directories. Target WP 7.0+, PHP 8.1+.
 
 | Directory | Plugin | Prefix | Depends on |
 |-----------|--------|--------|------------|

@@ -9,7 +9,7 @@ This repository contains two WordPress plugins developed by Vicedomini Softworks
 Manage secrets with multiple providers: encrypted database, AWS Secrets Manager, and Hashicorp Vault/OpenBao.
 
 - **Version**: 1.0.0
-- **Requires**: WordPress 6.9+, PHP 7.2.24+
+- **Requires**: WordPress 7.0+, PHP 8.1+
 - **License**: GPL v3
 - **Directory**: `v-secrets-manager/`
 
@@ -33,7 +33,7 @@ $api_key = vs_secrets_manager_get( 'api_key' );
 Display social media feeds from Instagram, Facebook, TikTok, X, Threads, Bluesky, and YouTube.
 
 - **Version**: 1.0.0
-- **Requires**: WordPress 6.9+, PHP 7.2.24+
+- **Requires**: WordPress 7.0+, PHP 8.1+
 - **Requires Plugins**: v-secrets-manager
 - **License**: GPL v3
 - **Directory**: `social-feed/`
@@ -43,7 +43,7 @@ Display social media feeds from Instagram, Facebook, TikTok, X, Threads, Bluesky
 Complete SMTP, Brevo, and Mailgun email delivery plugin for WordPress.
 
 - **Version**: 1.0.0
-- **Requires**: WordPress 6.9+, PHP 7.2.24+
+- **Requires**: WordPress 7.0+, PHP 8.1+
 - **Requires Plugins**: v-secrets-manager
 - **License**: GPL v3
 - **Directory**: `vs-mailer/`
@@ -61,8 +61,8 @@ Complete SMTP, Brevo, and Mailgun email delivery plugin for WordPress.
 
 ### Requirements
 
-- WordPress 6.9+
-- PHP 7.2.24+
+- WordPress 7.0+
+- PHP 8.1+
 
 ### Linting
 

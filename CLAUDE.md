@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repo Overview
 
-GPL v3 monorepo of WordPress plugins by Vicedomini Softworks. Each plugin lives in its own top-level directory (e.g. `social-feed/`). Target: WordPress 6.9+, PHP 7.2.24+.
+GPL v3 monorepo of WordPress plugins by Vicedomini Softworks. Each plugin lives in its own top-level directory (e.g. `social-feed/`). Target: WordPress 7.0+, PHP 8.1+.
 
 ## Development Commands
 
