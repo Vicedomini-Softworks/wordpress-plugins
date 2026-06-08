@@ -1,0 +1,10 @@
+.v-auth-sso-buttons {
+	margin-top: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.v-auth-sso-button {
+	text-align: center;
+}

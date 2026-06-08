@@ -1,0 +1,20 @@
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+    level: 5
+    paths:
+        - .
+    excludePaths:
+        - vendor (?)
+        - tests (?)
+        - node_modules (?)
+    bootstrapFiles:
+        - phpstan-bootstrap.php
+    parallel:
+        maximumNumberOfProcesses: 1
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        # Stub always returns null — intentional; real function returns string|null at runtime.
+        - message: '#Function vs_secrets_manager_get\(\) never returns string#'
+          path: phpstan-bootstrap.php
