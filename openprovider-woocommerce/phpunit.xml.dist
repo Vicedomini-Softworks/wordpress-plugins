@@ -1,0 +1,13 @@
+<?php
+/**
+ * PHPUnit configuration for OpenProvider WooCommerce
+ */
+
+return [
+	'bootstrap' => 'tests/unit/bootstrap.php',
+	'colors' => true,
+	'testSuiteLoader' => [
+		'class' => 'PHPUnit\Runner\StandardTestSuiteLoader',
+	],
+	'testsMatchPattern' => '*Test.php',
+];

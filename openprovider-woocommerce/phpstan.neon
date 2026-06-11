@@ -1,0 +1,14 @@
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+    level: 5
+    paths:
+        - src
+    bootstrapFiles:
+        - phpstan-bootstrap.php
+        - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        # WooCommerce stubs (WC_Product, WC_Order, etc.)
+        - '#(unknown class|invalid type|call to method .* on an unknown class) WC_.*#'

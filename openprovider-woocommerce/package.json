@@ -1,0 +1,11 @@
+{
+	"name": "openprovider-woocommerce",
+	"version": "1.0.0",
+	"scripts": {
+		"build": "wp-scripts build blocks/domain-search/src/index.js --output-path=blocks/domain-search/build",
+		"start": "wp-scripts start blocks/domain-search/src/index.js --output-path=blocks/domain-search/build"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^27.0.0"
+	}
+}

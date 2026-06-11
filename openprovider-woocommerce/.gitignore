@@ -1,0 +1,14 @@
+.git
+vendor/
+node_modules/
+blocks/domain-search/build/
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+*.pot
+*.mo
+.env
+.env.local
+phpunit.xml
+.phpunit.result.cache

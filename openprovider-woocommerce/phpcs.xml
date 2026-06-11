@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<ruleset name="OpenProviderWooCommerce">
+	<description>WordPress Coding Standards for OpenProvider WooCommerce</description>
+
+	<!-- What to scan -->
+	<file>./src</file>
+	<file>./tests</file>
+	<file>./openprovider-woocommerce.php</file>
+
+	<!-- Exclude patterns -->
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/tests/unit/Fixtures/*</exclude-pattern>
+	<exclude-pattern>*/blocks/*/build/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+
+	<!-- What to scan for -->
+	<rule ref="WordPress">
+		<exclude name="WordPress.Files.FileName"/>
+		<exclude name="Squiz.Commenting"/>
+		<exclude name="Generic.Commenting.DocComment.MissingShort"/>
+		<exclude name="WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase"/>
+		<exclude name="WordPress.PHP.StrictInArray.MissingTrueStrict"/>
+		<exclude name="WordPress.PHP.StrictComparisons.LooseComparison"/>
+	</rule>
+
+	<!-- WordPress specific config -->
+	<config name="minimum_supported_wp_version" value="7.0"/>
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="openprovider-woocommerce"/>
+			</property>
+		</properties>
+	</rule>
+
+	<!-- PHP version -->
+	<config name="testVersion" value="8.1-"/>
+</ruleset>
