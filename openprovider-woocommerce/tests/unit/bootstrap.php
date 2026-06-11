@@ -33,18 +33,20 @@ if ( ! function_exists( 'delete_option' ) ) {
 
 if ( ! function_exists( 'set_transient' ) ) {
 	function set_transient( $transient, $value, $expiration = 0 ) {
+		$GLOBALS['opwc_test_transients'][ $transient ] = $value;
 		return true;
 	}
 }
 
 if ( ! function_exists( 'get_transient' ) ) {
 	function get_transient( $transient ) {
-		return false;
+		return $GLOBALS['opwc_test_transients'][ $transient ] ?? false;
 	}
 }
 
 if ( ! function_exists( 'delete_transient' ) ) {
 	function delete_transient( $transient ) {
+		unset( $GLOBALS['opwc_test_transients'][ $transient ] );
 		return true;
 	}
 }
@@ -93,7 +95,7 @@ if ( ! function_exists( 'wp_json_encode' ) ) {
 
 if ( ! function_exists( 'current_time' ) ) {
 	function current_time( $type, $gmt = 0 ) {
-		return date( 'Y-m-d H:i:s' );
+		return gmdate( 'Y-m-d H:i:s' );
 	}
 }
 
@@ -164,7 +166,7 @@ if ( ! function_exists( 'is_wp_error' ) ) {
 
 if ( ! function_exists( 'wc_get_logger' ) ) {
 	function wc_get_logger() {
-		return new class implements \WC_Logger_Interface {
+		return new class() implements \WC_Logger_Interface {
 			public function debug( $message, $context = array() ) {}
 			public function info( $message, $context = array() ) {}
 			public function notice( $message, $context = array() ) {}
@@ -185,4 +187,14 @@ if ( ! function_exists( 'vs_secrets_manager_get' ) ) {
 	function vs_secrets_manager_get( string $name ): ?string {
 		return null;
 	}
+}
+
+if ( ! function_exists( 'wp_salt' ) ) {
+	function wp_salt( $scheme = 'auth' ) {
+		return 'test_salt_' . $scheme;
+	}
+}
+
+if ( ! defined( 'DAY_IN_SECONDS' ) ) {
+	define( 'DAY_IN_SECONDS', 86400 );
 }

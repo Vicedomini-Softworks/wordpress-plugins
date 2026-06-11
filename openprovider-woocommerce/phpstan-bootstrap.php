@@ -5,6 +5,22 @@
  * Defines stubs for WordPress functions not available during static analysis.
  */
 
+if ( ! defined( 'OPWC_PLUGIN_FILE' ) ) {
+	define( 'OPWC_PLUGIN_FILE', __DIR__ . '/openprovider-woocommerce.php' );
+}
+
+if ( ! defined( 'OPWC_PLUGIN_DIR' ) ) {
+	define( 'OPWC_PLUGIN_DIR', __DIR__ . '/' );
+}
+
+if ( ! defined( 'OPWC_PLUGIN_URL' ) ) {
+	define( 'OPWC_PLUGIN_URL', 'https://example.com/wp-content/plugins/openprovider-woocommerce/' );
+}
+
+if ( ! defined( 'OPWC_VERSION' ) ) {
+	define( 'OPWC_VERSION', '1.0.0' );
+}
+
 if ( ! function_exists( 'get_option' ) ) {
 	/**
 	 * Stub for get_option().
@@ -53,7 +69,7 @@ if ( ! function_exists( 'wp_create_nonce' ) ) {
 	/**
 	 * Stub for wp_create_nonce().
 	 */
-	function wp_create_nonce( string $action = -1 ): string {
+	function wp_create_nonce( $action = -1 ): string {
 		return 'stub_nonce';
 	}
 }
@@ -62,7 +78,7 @@ if ( ! function_exists( 'wp_verify_nonce' ) ) {
 	/**
 	 * Stub for wp_verify_nonce().
 	 */
-	function wp_verify_nonce( string $nonce, string $action = -1 ): bool {
+	function wp_verify_nonce( string $nonce, $action = -1 ): bool {
 		return true;
 	}
 }

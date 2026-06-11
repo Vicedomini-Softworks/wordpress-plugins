@@ -35,6 +35,7 @@ class Shortcode {
 	 */
 	public function register(): void {
 		add_shortcode( 'openprovider_domain_search', array( $this, 'render' ) );
+		add_shortcode( 'openprovider_domain_transfer', array( $this, 'render_transfer' ) );
 	}
 
 	/**
@@ -54,6 +55,22 @@ class Shortcode {
 		// Render template.
 		ob_start();
 		include OPWC_PLUGIN_DIR . 'templates/shortcode-domain-search.php';
+		return ob_get_clean();
+	}
+
+	/**
+	 * Render transfer shortcode.
+	 *
+	 * @param array $atts Shortcode attributes.
+	 * @return string
+	 */
+	public function render_transfer( array $atts ): string {
+		$this->enqueue_transfer_assets();
+
+		$allowed_tlds = $this->settings->get_allowed_tlds();
+
+		ob_start();
+		include OPWC_PLUGIN_DIR . 'templates/shortcode-domain-transfer.php';
 		return ob_get_clean();
 	}
 
@@ -80,18 +97,56 @@ class Shortcode {
 			'opwc-domain-search',
 			'opwcSearch',
 			array(
-				'restUrl' => rest_url( 'openprovider-woocommerce/v1/search' ),
-				'cartUrl' => rest_url( 'openprovider-woocommerce/v1/cart/add' ),
-				'nonce' => wp_create_nonce( 'wp_rest' ),
-				'allowedTlds' => $this->settings->get_allowed_tlds(),
+				'restUrl'       => rest_url( 'openprovider-woocommerce/v1/search' ),
+				'cartUrl'       => rest_url( 'openprovider-woocommerce/v1/cart/add' ),
+				'nonce'         => wp_create_nonce( 'wp_rest' ),
+				'allowedTlds'   => $this->settings->get_allowed_tlds(),
 				'defaultPeriod' => $this->settings->get_default_registration_period(),
-				'i18n' => array(
-					'searching' => __( 'Searching...', 'openprovider-woocommerce' ),
+				'i18n'          => array(
+					'searching'    => __( 'Searching...', 'openprovider-woocommerce' ),
 					'addToIntCart' => __( 'Add to Cart', 'openprovider-woocommerce' ),
-					'addedToCart' => __( 'Added to cart!', 'openprovider-woocommerce' ),
-					'unavailable' => __( 'Unavailable', 'openprovider-woocommerce' ),
-					'premium' => __( 'Premium', 'openprovider-woocommerce' ),
-					'error' => __( 'An error occurred. Please try again.', 'openprovider-woocommerce' ),
+					'addedToCart'  => __( 'Added to cart!', 'openprovider-woocommerce' ),
+					'unavailable'  => __( 'Unavailable', 'openprovider-woocommerce' ),
+					'premium'      => __( 'Premium', 'openprovider-woocommerce' ),
+					'error'        => __( 'An error occurred. Please try again.', 'openprovider-woocommerce' ),
+				),
+			)
+		);
+	}
+
+	/**
+	 * Enqueue transfer assets.
+	 */
+	private function enqueue_transfer_assets(): void {
+		wp_enqueue_style(
+			'opwc-domain-transfer',
+			OPWC_PLUGIN_URL . 'assets/css/domain-transfer.css',
+			array(),
+			OPWC_VERSION
+		);
+
+		wp_enqueue_script(
+			'opwc-domain-transfer',
+			OPWC_PLUGIN_URL . 'assets/js/domain-transfer.js',
+			array( 'jquery' ),
+			OPWC_VERSION,
+			true
+		);
+
+		wp_localize_script(
+			'opwc-domain-transfer',
+			'opwcTransfer',
+			array(
+				'checkUrl' => rest_url( 'openprovider-woocommerce/v1/transfer/check' ),
+				'cartUrl'  => rest_url( 'openprovider-woocommerce/v1/transfer/cart/add' ),
+				'nonce'    => wp_create_nonce( 'wp_rest' ),
+				'i18n'     => array(
+					'invalidDomain' => __( 'Please enter a valid domain name.', 'openprovider-woocommerce' ),
+					'checking'      => __( 'Checking...', 'openprovider-woocommerce' ),
+					'notEligible'   => __( 'This domain is not eligible for transfer.', 'openprovider-woocommerce' ),
+					'error'         => __( 'An error occurred. Please try again.', 'openprovider-woocommerce' ),
+					'checkTransfer' => __( 'Check Transfer', 'openprovider-woocommerce' ),
+					'addedToCart'   => __( 'Added to cart!', 'openprovider-woocommerce' ),
 				),
 			)
 		);

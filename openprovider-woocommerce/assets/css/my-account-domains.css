@@ -1,0 +1,41 @@
+.opwc-domains-table .opwc-domain-status {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 3px;
+	font-size: 0.85em;
+	text-transform: capitalize;
+}
+
+.opwc-domain-status.status-registered {
+	background: #c6e1c6;
+	color: #2c4700;
+}
+
+.opwc-domain-status.status-pending {
+	background: #f8dda7;
+	color: #94660c;
+}
+
+.opwc-domain-status.status-failed,
+.opwc-domain-status.status-expired {
+	background: #eba3a3;
+	color: #761919;
+}
+
+.opwc-expiry-warning {
+	color: #b32d2e;
+	font-weight: 600;
+}
+
+.opwc-domain-details-table th {
+	text-align: left;
+	width: 180px;
+}
+
+.opwc-domain-actions h3 {
+	margin-top: 1.5em;
+}
+
+.opwc-domain-actions form {
+	margin-bottom: 1em;
+}

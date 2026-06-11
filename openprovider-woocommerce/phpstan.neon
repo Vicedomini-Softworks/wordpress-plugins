@@ -6,8 +6,8 @@ parameters:
     paths:
         - src
     bootstrapFiles:
-        - phpstan-bootstrap.php
         - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+        - phpstan-bootstrap.php
     treatPhpDocTypesAsCertain: false
     ignoreErrors:
         # WooCommerce stubs (WC_Product, WC_Order, etc.)

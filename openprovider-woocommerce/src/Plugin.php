@@ -15,6 +15,9 @@ use OpenProviderWooCommerce\Api\WpHttpClient;
 use OpenProviderWooCommerce\Api\AuthService;
 use OpenProviderWooCommerce\Api\DomainService;
 use OpenProviderWooCommerce\Api\PricingService;
+use OpenProviderWooCommerce\Api\RenewalService;
+use OpenProviderWooCommerce\Api\TransferService;
+use OpenProviderWooCommerce\Api\DnsService;
 use OpenProviderWooCommerce\Activation\Schema;
 
 /**
@@ -60,24 +63,48 @@ class Plugin {
 	 */
 	private static function register_hooks(): void {
 		// Initialize core services.
-		$settings = new Settings();
-		$logger = new Logger( $settings );
+		$settings     = new Settings();
+		$logger       = new Logger( $settings );
 		$rate_limiter = new RateLimiter();
 
 		// Initialize HTTP client and API services.
-		$http_client = new WpHttpClient( $settings->get_api_base_url(), null, $logger );
-		$auth_service = new AuthService( $http_client, $settings, $logger );
-		$domain_service = new DomainService( $http_client, $auth_service, $settings, $logger );
-		$pricing_service = new PricingService( $http_client, $auth_service, $logger );
+		$http_client      = new WpHttpClient( $settings->get_api_base_url(), null, $logger );
+		$auth_service     = new AuthService( $http_client, $settings, $logger );
+		$domain_service   = new DomainService( $http_client, $auth_service, $settings, $logger );
+		$pricing_service  = new PricingService( $http_client, $auth_service, $logger );
+		$renewal_service  = new RenewalService( $http_client, $auth_service, $settings, $logger );
+		$transfer_service = new TransferService( $http_client, $auth_service, $settings, $logger );
+		$dns_service      = new DnsService( $http_client, $auth_service, $settings, $logger );
 
 		// Register WooCommerce integration (hooks).
-		$domain_repository = new WooCommerce\DomainRepository();
-		$domain_product_factory = new WooCommerce\DomainProductFactory( $settings, $pricing_service, $domain_service, $logger );
-		$cart_integration = new WooCommerce\CartIntegration( $domain_product_factory, $domain_service, $settings, $logger );
-		$order_integration = new WooCommerce\OrderIntegration( $domain_service, $domain_repository, $logger, $settings );
+		$domain_repository       = new WooCommerce\DomainRepository();
+		$notification_repository = new WooCommerce\NotificationRepository();
+		$contact_resolver        = new WooCommerce\ContactDataResolver();
+		$domain_product_factory  = new WooCommerce\DomainProductFactory( $settings, $pricing_service, $domain_service, $logger );
+		$cart_integration        = new WooCommerce\CartIntegration( $domain_product_factory, $domain_service, $settings, $logger );
+		$order_integration       = new WooCommerce\OrderIntegration( $domain_service, $domain_repository, $logger, $settings, $contact_resolver );
 
 		$cart_integration->register();
 		$order_integration->register();
+
+		// Renewal workflow.
+		$renewal_integration = new WooCommerce\RenewalIntegration( $renewal_service, $domain_repository, $notification_repository, $domain_product_factory, $settings, $logger );
+		$renewal_notifier    = new WooCommerce\RenewalNotifier( $settings, $logger, $domain_repository, $notification_repository );
+		$renewal_integration->register();
+		$renewal_notifier->register();
+
+		// Transfer workflow.
+		$transfer_product_factory = new WooCommerce\TransferProductFactory( $logger );
+		$transfer_integration     = new WooCommerce\TransferIntegration( $transfer_service, $domain_repository, $transfer_product_factory, $contact_resolver, $settings, $logger );
+		$transfer_integration->register();
+
+		// DNS management.
+		$dns_integration = new WooCommerce\DnsIntegration( $dns_service, $domain_repository, $settings, $logger );
+		$dns_integration->register();
+
+		// My Account domain panel.
+		$my_account_domains = new WooCommerce\MyAccountDomains( $domain_repository, $renewal_integration, $settings );
+		$my_account_domains->register();
 
 		// Register REST API routes.
 		$domain_search_controller = new Rest\DomainSearchController( $rate_limiter, $settings, $logger, $domain_service, $pricing_service, $domain_product_factory );
@@ -88,6 +115,15 @@ class Plugin {
 
 		$admin_controller = new Rest\AdminController( $rate_limiter, $settings, $logger, $auth_service );
 		$admin_controller->register_routes();
+
+		$renewal_controller = new Rest\RenewalController( $rate_limiter, $settings, $logger, $domain_repository, $renewal_integration, $renewal_service );
+		$renewal_controller->register_routes();
+
+		$transfer_controller = new Rest\TransferController( $rate_limiter, $settings, $logger, $transfer_service, $transfer_integration, $domain_repository );
+		$transfer_controller->register_routes();
+
+		$dns_controller = new Rest\DnsController( $rate_limiter, $settings, $logger, $dns_service, $domain_repository );
+		$dns_controller->register_routes();
 
 		// Register admin pages (only in admin).
 		if ( is_admin() ) {

@@ -48,23 +48,33 @@ class OrderIntegration {
 	private Settings $settings;
 
 	/**
+	 * Contact data resolver.
+	 *
+	 * @var ContactDataResolver
+	 */
+	private ContactDataResolver $contact_resolver;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param DomainService    $domain_service Domain service.
-	 * @param DomainRepository $repository Domain repository.
-	 * @param Logger           $logger Logger.
-	 * @param Settings         $settings Settings.
+	 * @param DomainService       $domain_service Domain service.
+	 * @param DomainRepository    $repository Domain repository.
+	 * @param Logger              $logger Logger.
+	 * @param Settings            $settings Settings.
+	 * @param ContactDataResolver $contact_resolver Contact data resolver.
 	 */
 	public function __construct(
 		DomainService $domain_service,
 		DomainRepository $repository,
 		Logger $logger,
-		Settings $settings
+		Settings $settings,
+		ContactDataResolver $contact_resolver
 	) {
-		$this->domain_service = $domain_service;
-		$this->repository = $repository;
-		$this->logger = $logger;
-		$this->settings = $settings;
+		$this->domain_service   = $domain_service;
+		$this->repository       = $repository;
+		$this->logger           = $logger;
+		$this->settings         = $settings;
+		$this->contact_resolver = $contact_resolver;
 	}
 
 	/**
@@ -112,9 +122,9 @@ class OrderIntegration {
 	 */
 	private function process_domain_line_item( \WC_Order $order, \WC_Order_Item_Product $item, int $customer_id ): void {
 		// Check if this is a domain item.
-		$domain_name = $item->get_meta( 'domain_name', true );
-		$tld = $item->get_meta( 'tld', true );
-		$registration_period = $item->get_meta( 'registration_period', true );
+		$domain_name          = $item->get_meta( 'domain_name', true );
+		$tld                  = $item->get_meta( 'tld', true );
+		$registration_period  = $item->get_meta( 'registration_period', true );
 		$existing_op_order_id = $item->get_meta( 'openprovider_order_id', true );
 
 		// Skip if not a domain item or already registered.
@@ -137,13 +147,13 @@ class OrderIntegration {
 		// Insert pending record.
 		$domain_id = $this->repository->insert(
 			array(
-				'order_id' => $order_id,
-				'order_item_id' => $item->get_id(),
-				'customer_id' => $customer_id,
-				'domain_name' => $domain_name,
-				'tld' => $tld,
+				'order_id'            => $order_id,
+				'order_item_id'       => $item->get_id(),
+				'customer_id'         => $customer_id,
+				'domain_name'         => $domain_name,
+				'tld'                 => $tld,
 				'registration_period' => $registration_period,
-				'status' => 'pending',
+				'status'              => 'pending',
 			)
 		);
 
@@ -151,18 +161,18 @@ class OrderIntegration {
 
 		try {
 			// Get contact handle from customer profile.
-			$contact_data = $this->get_contact_data( $customer_id, $tld );
+			$contact_data = $this->contact_resolver->get_contact_data( $customer_id, $tld );
 
 			// Build registration request.
 			$registration_data = array(
-				'domain_name' => $domain_name,
-				'tld' => $tld,
+				'domain_name'         => $domain_name,
+				'tld'                 => $tld,
 				'registration_period' => (int) $registration_period,
-				'owner_handle' => $contact_data['owner_handle'],
-				'admin_handle' => $contact_data['admin_handle'],
-				'tech_handle' => $contact_data['tech_handle'],
-				'billing_handle' => $contact_data['billing_handle'],
-				'additional_data' => $contact_data['additional_data'],
+				'owner_handle'        => $contact_data['owner_handle'],
+				'admin_handle'        => $contact_data['admin_handle'],
+				'tech_handle'         => $contact_data['tech_handle'],
+				'billing_handle'      => $contact_data['billing_handle'],
+				'additional_data'     => $contact_data['additional_data'],
 			);
 
 			// Register domain.
@@ -184,7 +194,7 @@ class OrderIntegration {
 			$order->add_order_note(
 				sprintf(
 					/* translators: %s: OpenProvider order ID */
-					__( 'Domain %s.%s registered successfully via OpenProvider (order: %s)', 'openprovider-woocommerce' ),
+					__( 'Domain %1$s.%2$s registered successfully via OpenProvider (order: %3$s)', 'openprovider-woocommerce' ),
 					$domain_name,
 					$tld,
 					$result['order_id'] ?? 'N/A'
@@ -237,61 +247,6 @@ class OrderIntegration {
 	}
 
 	/**
-	 * Get contact data for domain registration.
-	 *
-	 * @param int    $customer_id Customer ID.
-	 * @param string $tld TLD.
-	 * @return array Contact data with handles and additional_data.
-	 */
-	private function get_contact_data( int $customer_id, string $tld ): array {
-		// Get customer billing data from last order or user meta.
-		$user = get_user_by( 'id', $customer_id );
-
-		$first_name = $user->first_name ?? '';
-		$last_name = $user->last_name ?? '';
-		$email = $user->user_email ?? '';
-		$phone = get_user_meta( $customer_id, 'opwc_phone', true ) ?: '';
-		$company = get_user_meta( $customer_id, 'opwc_company_name', true ) ?: '';
-		$fiscal_code = get_user_meta( $customer_id, 'opwc_fiscal_code', true ) ?: '';
-		$vat_number = get_user_meta( $customer_id, 'opwc_vat_number', true ) ?: '';
-
-		// For v1, we'll use a simple approach: create a contact handle based on email.
-		// In production, you'd want to create/reuse proper OpenProvider contact handles.
-		$handle = 'opwc_' . md5( $email . $customer_id );
-
-		$additional_data = array();
-
-		// TLD-specific additional data.
-		if ( 'it' === strtolower( $tld ) ) {
-			if ( $company ) {
-				$additional_data['it'] = array(
-					'entity_type' => 'company',
-					'identification_code' => $vat_number ?: $fiscal_code,
-				);
-			} elseif ( $fiscal_code ) {
-				$additional_data['it'] = array(
-					'entity_type' => 'individual',
-					'identification_code' => $fiscal_code,
-				);
-			}
-		} elseif ( 'eu' === strtolower( $tld ) ) {
-			if ( $vat_number ) {
-				$additional_data['eu'] = array(
-					'vat_number' => $vat_number,
-				);
-			}
-		}
-
-		return array(
-			'owner_handle' => $handle,
-			'admin_handle' => $handle,
-			'tech_handle' => $handle,
-			'billing_handle' => $handle,
-			'additional_data' => $additional_data,
-		);
-	}
-
-	/**
 	 * Notify admin of registration failure.
 	 *
 	 * @param \WC_Order          $order Order object.
@@ -301,11 +256,11 @@ class OrderIntegration {
 	private function notify_admin_failure( \WC_Order $order, \WC_Order_Item_Product $item, \Throwable $exception ): void {
 		$admin_email = $this->settings->get_admin_notification_email();
 		$domain_name = $item->get_meta( 'domain_name', true );
-		$tld = $item->get_meta( 'tld', true );
+		$tld         = $item->get_meta( 'tld', true );
 
 		$subject = sprintf(
 			/* translators: %s: domain name */
-			__( '[OpenProvider WooCommerce] Domain registration failed: %s.%s', 'openprovider-woocommerce' ),
+			__( '[OpenProvider WooCommerce] Domain registration failed: %1$s.%2$s', 'openprovider-woocommerce' ),
 			$domain_name,
 			$tld
 		);

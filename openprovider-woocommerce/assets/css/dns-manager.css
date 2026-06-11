@@ -1,0 +1,75 @@
+.opwc-dns-manager .opwc-dns-section {
+	margin-bottom: 2em;
+}
+
+.opwc-dns-manager h3 {
+	margin-bottom: 0.5em;
+}
+
+.opwc-nameserver-type label {
+	display: inline-block;
+	margin-right: 1.5em;
+}
+
+.opwc-custom-nameservers {
+	margin: 1em 0;
+}
+
+.opwc-nameserver-input {
+	display: block;
+	width: 100%;
+	max-width: 320px;
+	margin-bottom: 0.5em;
+	padding: 8px 10px;
+}
+
+.opwc-add-nameserver-btn {
+	margin-bottom: 1em;
+}
+
+.opwc-nameservers-status {
+	margin-left: 0.75em;
+	font-style: italic;
+}
+
+.opwc-dns-records-table th,
+.opwc-dns-records-table td {
+	text-align: left;
+	padding: 8px 10px;
+}
+
+.opwc-record-type {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 3px;
+	background: #e5e5e5;
+	font-size: 0.85em;
+	font-weight: 600;
+}
+
+.opwc-dns-record-form {
+	max-width: 480px;
+	margin: 1.5em 0;
+	padding: 1em 1.5em;
+	background: #f9f9f9;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+
+.opwc-dns-record-form label {
+	display: block;
+	margin-bottom: 0.25em;
+	font-weight: 600;
+}
+
+.opwc-dns-record-form input,
+.opwc-dns-record-form select {
+	width: 100%;
+	padding: 8px 10px;
+}
+
+.opwc-propagation-warning {
+	padding: 10px 15px;
+	background: #f8dda7;
+	border-radius: 4px;
+}
